@@ -1,0 +1,1952 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLBB // Draft, Combos &amp; Emblem Codex</title>
+
+  <!-- Search Engine & Indexing Meta Tags -->
+  <meta name="description" content="Interactive Mobile Legends: Bang Bang (MLBB) draft counter picker, 52-hero matchups, recommended emblems and battle spells, skill combos, 6-item builds, and 5-man team compositions." />
+  <meta name="keywords" content="Mobile Legends, MLBB, MLBB counters, MLBB emblems, MLBB combos, MLBB builds, MLBB 5-man team, draft helper, hero guide" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Google Search Console Verification Placeholder (Replace content value with your verification token) -->
+  <meta name="google-site-verification" content="PASTE_YOUR_GOOGLE_VERIFICATION_CODE_HERE" />
+
+  <!-- Open Graph & Social Preview Meta Tags -->
+  <meta property="og:title" content="MLBB // Draft, Combos &amp; Emblem Codex" />
+  <meta property="og:description" content="Explore 52 MLBB heroes with counter matchups, emblems, battle spells, skill combos, 6-item builds, and 5-man team lineups." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MLBB // Draft, Combos &amp; Emblem Codex" />
+  <meta name="twitter:description" content="Interactive MLBB draft counters, emblems, skill combos, 6-item equipment builds, and 5-man team compositions." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Cinzel', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            codex: {
+              bg: '#060b16',
+              surface: '#0b1326',
+              card: '#111c33',
+              border: '#1e325c',
+              gold: '#f5c451',
+              cyan: '#22d3ee',
+            }
+          },
+          boxShadow: {
+            'gold-glow': '0 0 24px rgba(245, 196, 81, 0.22)',
+            'cyan-glow': '0 0 24px rgba(34, 211, 238, 0.20)',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Deep navy tactical radar grid & ambient gradients */
+    body {
+      background-color: #060b16;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 85% 12%, rgba(245, 196, 81, 0.11) 0%, transparent 42%),
+        linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #060b16 0%, #091122 100%);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px, 100% 100%;
+      color: #e2e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060b16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e325c;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f5c451;
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fde68a 0%, #f5c451 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-card {
+      animation: fadeSlideUp 0.22s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-[#f5c451]/30 selection:text-amber-100">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="flex items-center gap-2.5 bg-[#0b1326]/95 border border-[#f5c451]/70 text-amber-100 px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md text-xs sm:text-sm font-medium">
+      <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <span id="toast-msg">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-[#060b16]/92 backdrop-blur-xl border-b border-[#1e325c]/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+      <!-- Brand Identity -->
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#fde68a] via-[#f5c451] to-amber-700 p-[1.5px] shadow-gold-glow shrink-0">
+            <div class="w-full h-full bg-[#060b16] rounded-[10px] flex items-center justify-center">
+              <svg class="w-5 h-5 text-[#f5c451]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L19.5 6.5V17.5L12 22L4.5 17.5V6.5L12 2Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 7V17M7.5 10L16.5 14M16.5 10L7.5 14" />
+              </svg>
+            </div>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h1 class="font-display font-bold text-sm sm:text-lg tracking-wider gold-gradient-text truncate">
+                MLBB // Draft, Combos &amp; Emblem Codex
+              </h1>
+              <span class="hidden sm:inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#22d3ee]/10 border border-[#22d3ee]/40 text-[#22d3ee] shrink-0">
+                52 HEROES
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-400 truncate">
+              Counter Matchups, Skill Combos, 6-Item Builds, Emblems &amp; 5-Man Lineups
+            </p>
+          </div>
+        </div>
+
+        <!-- Mobile Top View Tabs -->
+        <div class="flex lg:hidden bg-[#0b1326] p-1 rounded-xl border border-[#1e325c] shrink-0">
+          <button onclick="switchMainTab('draft')" id="tab-draft-mobile"
+            class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition bg-[#f5c451]/20 text-amber-200 border border-[#f5c451]/60">
+            Hero Database &amp; Draft
+          </button>
+          <button onclick="switchMainTab('emblems')" id="tab-emblems-mobile"
+            class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">
+            Emblem Codex
+          </button>
+        </div>
+      </div>
+
+      <!-- Desktop Top View Switcher -->
+      <div class="hidden lg:flex bg-[#0b1326] p-1 rounded-xl border border-[#1e325c] shrink-0">
+        <button onclick="switchMainTab('draft')" id="tab-draft-desktop"
+          class="px-4 py-1.5 rounded-lg text-xs font-semibold transition bg-[#f5c451]/20 text-amber-200 border border-[#f5c451]/60 shadow-sm">
+          Hero Database &amp; Draft
+        </button>
+        <button onclick="switchMainTab('emblems')" id="tab-emblems-desktop"
+          class="px-4 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-white">
+          Emblem Codex
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Active Enemy Draft Counter Banner -->
+  <div id="counter-banner" class="hidden border-b border-rose-500/30 bg-gradient-to-r from-rose-950/50 via-[#0b1326] to-cyan-950/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+      <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+        <span class="px-2.5 py-0.5 rounded-md bg-rose-500/20 border border-rose-400/40 text-rose-300 font-mono text-[11px] uppercase">
+          Enemy Pick
+        </span>
+        <strong id="banner-enemy-name" class="text-white font-bold"></strong>
+        <span class="text-slate-400 text-xs">→ Filtering direct counter picks</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs text-emerald-300 font-semibold">Recommended Counters:</span>
+        <div id="banner-counter-chips" class="flex flex-wrap gap-1.5"></div>
+        <button onclick="resetEnemyCounter()"
+          class="ml-1 text-xs px-2.5 py-1 rounded-lg bg-[#111c33] hover:bg-slate-800 text-slate-300 border border-[#1e325c] transition">
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: HERO DATABASE & DRAFT -->
+  <main id="view-draft" class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+    <!-- Filter & Draft Bar -->
+    <section class="bg-[#0b1326]/95 border border-[#1e325c] rounded-2xl p-3.5 sm:p-4 mb-5 shadow-xl">
+      <!-- Row 1: Enemy Counter Dropdown, Search Input, Lane Dropdown, Talent Dropdown -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 mb-3.5">
+        <!-- Enemy Counter Selector -->
+        <div class="lg:col-span-3 relative">
+          <select id="enemy-counter-select" onchange="handleEnemySelect(this.value)" aria-label="Enemy Counter Selector"
+            class="w-full appearance-none bg-[#111c33] border border-rose-500/40 hover:border-rose-400 focus:border-[#f5c451] rounded-xl pl-3 pr-8 py-2.5 text-xs sm:text-sm font-medium text-rose-200 outline-none transition cursor-pointer">
+            <option value="">⚔ Counter Enemy Hero...</option>
+          </select>
+          <svg class="w-4 h-4 text-rose-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+
+        <!-- Search Input -->
+        <div class="lg:col-span-4 relative">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path stroke-linecap="round" d="M21 21l-4.35-4.35"></path>
+          </svg>
+          <input id="search-input" type="text"
+            placeholder="Search hero, strength, item, or combo..."
+            class="w-full bg-[#111c33] border border-[#1e325c] focus:border-[#22d3ee] focus:ring-2 focus:ring-[#22d3ee]/20 rounded-xl pl-9 pr-8 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 outline-none transition" />
+          <button id="clear-search" onclick="clearSearch()"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded bg-slate-800">
+            ✕
+          </button>
+        </div>
+
+        <!-- Lane Filter Dropdown -->
+        <div class="lg:col-span-2 relative">
+          <select id="lane-select" onchange="handleLaneSelect(this.value)" aria-label="Lane Filter"
+            class="w-full appearance-none bg-[#111c33] border border-[#1e325c] hover:border-[#22d3ee]/60 focus:border-[#22d3ee] rounded-xl pl-3 pr-8 py-2.5 text-xs sm:text-sm font-medium text-cyan-200 outline-none transition cursor-pointer">
+            <option value="All Lanes">All Lanes</option>
+            <option value="EXP Lane">EXP Lane</option>
+            <option value="Jungle">Jungle</option>
+            <option value="Mid Lane">Mid Lane</option>
+            <option value="Gold Lane">Gold Lane</option>
+            <option value="Roam">Roam</option>
+          </select>
+          <svg class="w-4 h-4 text-[#22d3ee] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+
+        <!-- Talent Filter Dropdown -->
+        <div class="lg:col-span-3 relative">
+          <select id="talent-select" onchange="handleTalentSelect(this.value)" aria-label="Talent Filter"
+            class="w-full appearance-none bg-[#111c33] border border-[#1e325c] hover:border-[#f5c451]/60 focus:border-[#f5c451] rounded-xl pl-3 pr-8 py-2.5 text-xs sm:text-sm font-medium text-amber-200 outline-none transition cursor-pointer">
+            <option value="">⚡ All Core Talents</option>
+          </select>
+          <svg class="w-4 h-4 text-[#f5c451] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Row 2: Role Filter Pills + Count / Reset -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-3 border-t border-[#1e325c]/70">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0" id="role-pills"></div>
+
+        <div class="flex items-center justify-between md:justify-end gap-3 text-xs text-slate-400 shrink-0">
+          <span>Showing <strong id="visible-count" class="text-[#f5c451] font-mono">0</strong> of 52 heroes</span>
+          <button onclick="resetAllFilters()"
+            class="px-2.5 py-1 rounded-lg bg-[#111c33] hover:bg-slate-800 text-slate-300 hover:text-[#f5c451] border border-[#1e325c] transition">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace: Hero Roster Grid + Tactical Inspector -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      <!-- Hero Roster Cards Grid -->
+      <div class="xl:col-span-7">
+        <div id="hero-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden bg-[#0b1326] border border-[#1e325c] rounded-2xl p-10 text-center">
+          <h3 class="text-base font-bold text-white mb-1">No Heroes Match Current Filters</h3>
+          <p class="text-xs text-slate-400 mb-4">Adjust your role, lane, core talent, enemy counter, or search query.</p>
+          <button onclick="resetAllFilters()"
+            class="px-4 py-2 rounded-xl bg-[#f5c451]/20 hover:bg-[#f5c451]/30 border border-[#f5c451]/60 text-amber-200 text-xs font-semibold transition">
+            Show All 52 Heroes
+          </button>
+        </div>
+      </div>
+
+      <!-- Desktop Sticky Hero Detail & Tactical Inspector -->
+      <aside class="hidden xl:block xl:col-span-5 sticky top-20">
+        <div id="desktop-inspector"
+          class="bg-[#0b1326]/95 border border-[#f5c451]/40 rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-6.25rem)] flex flex-col">
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- VIEW 2: EMBLEM CODEX -->
+  <section id="view-emblems" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div class="bg-[#0b1326] border border-[#1e325c] rounded-2xl p-5 sm:p-6 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <span class="text-[11px] font-mono uppercase tracking-widest text-[#22d3ee]">Revamped Talent System</span>
+        <h2 class="font-display text-xl sm:text-2xl font-bold gold-gradient-text mt-0.5">
+          7 OFFICIAL MLBB EMBLEMS &amp; CORE TALENTS
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+          Inspect max base attributes, recommended talent combinations, and click any emblem or Tier 3 Core Talent to filter matching heroes in the Draft Codex.
+        </p>
+      </div>
+      <button onclick="switchMainTab('draft')"
+        class="self-start md:self-center px-4 py-2 rounded-xl bg-[#22d3ee]/15 hover:bg-[#22d3ee]/25 border border-[#22d3ee]/40 text-[#22d3ee] text-xs font-semibold transition shrink-0">
+        ← Back to Hero Database &amp; Draft
+      </button>
+    </div>
+
+    <!-- 7 Official Emblems Grid -->
+    <div id="emblems-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div>
+
+    <!-- Tier 3 Core Talents Cheat Sheet -->
+    <div class="bg-[#0b1326] border border-[#1e325c] rounded-2xl p-5 sm:p-6">
+      <h3 class="font-display text-lg font-bold text-[#f5c451] mb-4 flex items-center gap-2">
+        <span>⚡</span> Tier 3 Core Talents Cheat Sheet
+      </h3>
+      <div id="core-talents-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3"></div>
+    </div>
+  </section>
+
+  <!-- Mobile / Tablet Inspector Drawer Modal -->
+  <div id="mobile-inspector-modal" class="fixed inset-0 z-50 hidden xl:hidden">
+    <div onclick="closeMobileInspector()" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div class="relative z-10 max-w-2xl mx-auto h-full sm:h-auto sm:max-h-[92vh] sm:my-5 flex flex-col bg-[#0b1326] sm:border sm:border-[#f5c451]/45 sm:rounded-2xl shadow-2xl overflow-hidden">
+      <div id="mobile-inspector-content" class="flex flex-col h-full overflow-hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. EMBLEM CATALOG, TIER 3 CORE TALENTS & ROLE STYLING METADATA
+    // =========================================================================
+    const EMBLEM_CATALOG = {
+      Assassin: {
+        id: 'Assassin',
+        name: 'Assassin',
+        badge: 'bg-rose-500/15 text-rose-300 border-rose-500/40',
+        maxStats: ['+16 Adaptive Penetration', '+10 Adaptive Attack', '+3% Movement Speed'],
+        roleSummary: 'Burst assassins, mobile junglers, and physical casters seeking armor penetration and speed.',
+        recommendedTalents: ['Rupture', 'Seasoned Hunter', 'Killing Spree']
+      },
+      Fighter: {
+        id: 'Fighter',
+        name: 'Fighter',
+        badge: 'bg-amber-500/15 text-amber-300 border-amber-500/40',
+        maxStats: ['+22 Adaptive Attack', '+6% Spell Vamp', '+10 Hybrid Defense'],
+        roleSummary: 'EXP laners and brawlers who trade closely, sustain through spell vamp, and frontline skirmishes.',
+        recommendedTalents: ['Thrill', 'Festival of Blood', 'Brave Smite']
+      },
+      Mage: {
+        id: 'Mage',
+        name: 'Mage',
+        badge: 'bg-purple-500/15 text-purple-300 border-purple-500/40',
+        maxStats: ['+16 Magic Power', '+5% Cooldown Reduction', '+450 Mana'],
+        roleSummary: 'Mid laners and magic damage carries reliant on skill rotation, mana pool, and magic burst.',
+        recommendedTalents: ['Rupture', 'Bargain Hunter', 'Lethal Ignition']
+      },
+      Marksman: {
+        id: 'Marksman',
+        name: 'Marksman',
+        badge: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40',
+        maxStats: ['+15% Attack Speed', '+5% Adaptive Attack', '+5% Lifesteal'],
+        roleSummary: 'Gold lane carry marksmen scaling with attack speed, kiting cadence, and sustained basic attacks.',
+        recommendedTalents: ['Swift', 'Weapons Master', 'Quantum Charge']
+      },
+      Tank: {
+        id: 'Tank',
+        name: 'Tank',
+        badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40',
+        maxStats: ['+500 Max HP', '+10 Hybrid Defense', '+4 HP Regen'],
+        roleSummary: 'Frontline roamers and durable tanks absorbing initiation damage and locking down priority targets.',
+        recommendedTalents: ['Vitality', 'Pull Yourself Together', 'Concussive Blast']
+      },
+      Support: {
+        id: 'Support',
+        name: 'Support',
+        badge: 'bg-sky-500/15 text-sky-300 border-sky-500/40',
+        maxStats: ['+10% Cooldown Reduction', '+6% Movement Speed', '+10 Healing Effect'],
+        roleSummary: 'Utility roamers and healers empowering allies with shields, cleanses, speed boosts, and vision.',
+        recommendedTalents: ['Agility', 'Pull Yourself Together', 'Focusing Mark']
+      },
+      Common: {
+        id: 'Common',
+        name: 'Common',
+        badge: 'bg-slate-500/15 text-slate-300 border-slate-500/40',
+        maxStats: ['+275 Max HP', '+22 Adaptive Attack', '+12 Mana Regen / 5s'],
+        roleSummary: 'Balanced hybrid stats for mana-hungry laners and flexible early-game trades.',
+        recommendedTalents: ['Agility', 'Bargain Hunter', 'Impure Rage']
+      }
+    };
+
+    const TIER3_TALENTS = [
+      { name: 'Killing Spree', desc: 'Restores 15% Max HP and grants 20% Movement Speed for 3s upon eliminating an enemy hero.' },
+      { name: 'Lethal Ignition', desc: 'Dealing multi-hit skill damage triggers extra adaptive burn damage on a short cooldown.' },
+      { name: 'Brave Smite', desc: 'Restores 5% Max HP after dealing skill damage to an enemy hero (has a short cooldown).' },
+      { name: 'Quantum Charge', desc: 'Basic attacks trigger a movement speed burst and restore a small portion of HP.' },
+      { name: 'Weakness Finder', desc: 'Basic attacks have a chance to slow enemy movement and attack speed.' },
+      { name: 'Concussive Blast', desc: 'Every few seconds, your next basic attack deals bonus AoE damage scaling with Max HP.' },
+      { name: 'Impure Rage', desc: 'Skill hits deal bonus adaptive damage scaling with target Max HP and restore Mana/Energy.' },
+      { name: 'Focusing Mark', desc: 'Damaging an enemy increases allied damage dealt to that target for 3 seconds.' }
+    ];
+
+    const ROLE_META = {
+      Assassin: { badge: 'bg-rose-500/15 text-rose-300 border-rose-500/40', grad: 'from-rose-500 to-amber-500' },
+      Fighter:  { badge: 'bg-amber-500/15 text-amber-300 border-amber-500/40', grad: 'from-amber-500 to-orange-600' },
+      Mage:     { badge: 'bg-purple-500/15 text-purple-300 border-purple-500/40', grad: 'from-purple-500 to-cyan-400' },
+      Marksman: { badge: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40', grad: 'from-cyan-400 to-blue-600' },
+      Tank:     { badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40', grad: 'from-emerald-400 to-teal-700' },
+      Support:  { badge: 'bg-sky-500/15 text-sky-300 border-sky-500/40', grad: 'from-sky-400 to-indigo-500' }
+    };
+
+    function ctr(hero, reason) {
+      return { hero, reason };
+    }
+
+    function st(label, type = 'skill') {
+      return { label, type };
+    }
+
+    // =========================================================================
+    // 2. COMPLETE 52-HERO ROSTER (10 ASSASSINS, 10 FIGHTERS, 10 MAGES, 10 MARKSMEN, 7 TANKS, 5 SUPPORTS)
+    // =========================================================================
+    const HEROES = [
+      // --- ASSASSINS (10) ---
+      {
+        id: 'helcurt', name: 'Helcurt', role: 'Assassin', lane: ['Jungle', 'Roam'],
+        specialty: 'Darkness Vision Denial / Silence Burst',
+        strengths: ['Global darkness blinds enemies and breaks team coordination', 'Silence + 5-stack Deadly Stingers delete backliners fast', 'High out-of-combat mobility and regen in Prowler state'],
+        counters: [ctr('Saber', 'Triple Sweep suppression stops him mid-dive'), ctr('Khufra', 'Bouncing Ball blocks his blink and stuns him'), ctr('Tigreal', 'Durable frontline that soaks burst and sets AoE stuns')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Master Assassin', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Rapid Boots (Ice Retri)', 'Blade of the Heptaseas', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair', 'Rose Gold Meteor'],
+        swaps: ['Sea Halberd', 'Immortality', 'Athena’s Shield'],
+        combos: [
+          { name: 'Darkness Backline Burst', steps: [st('Ult', 'ult'), st('S1', 'skill'), st('BA', 'ba'), st('S2', 'skill'), st('Retri', 'spell')], tip: 'Trigger Dark Night Falls to blind vision, blink with S1 to Silence, weave 1 basic attack, and fire full S2 Stingers.' },
+          { name: 'Bush Ambush Silence', steps: [st('S1', 'skill'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Wait for Prowler mark to light up in a bush before engaging so S1 applies Silence immediately.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Helcurt', mid: 'Luo Yi', gold: 'Claude', roam: 'Mathilda', archetype: 'Global Darkness & Flank', winCondition: 'Mask Luo Yi teleport and Yu Zhong flank inside global darkness to pick off carries.' }
+      },
+      {
+        id: 'hayabusa', name: 'Hayabusa', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Quad Shadow Mobility / Untargetable Execute',
+        strengths: ['4-way shadow teleports enable safe tower dives and escapes', 'Shadow Kill makes him untargetable while executing marked targets', 'Fast jungle clear and lethal level-4 gank spike'],
+        counters: [ctr('Saber', 'Suppression locks him before he can swap to a shadow'), ctr('Khufra', 'Bouncing Ball interrupts shadow dashes'), ctr('Tigreal', 'Heavy CC punishes predictable shadow returns')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Magic Shoes (Ice Retri)', 'Hunter Strike', 'Blade of the Heptaseas', 'Malefic Roar', 'Endless Battle', 'Blade of Despair'],
+        swaps: ['Sea Halberd', 'Rose Gold Meteor', 'Immortality'],
+        combos: [
+          { name: '4-Mark Shadow Kill', steps: [st('S2', 'skill'), st('S2 Front', 'skill'), st('S1', 'skill'), st('BA', 'ba'), st('Ult', 'ult'), st('S2 Back', 'skill')], tip: 'Swap onto the front shadow on top of the target so all 3 shurikens land for 4 marks, cast Ult, then snap back.' },
+          { name: 'Safe Tower Harass', steps: [st('S2', 'skill'), st('S1', 'skill'), st('S2 Back', 'skill')], tip: 'Keep your rear shadow outside turret range so you can poke and blink out cleanly.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Hayabusa', mid: 'Kagura', gold: 'Beatrix', roam: 'Mathilda', archetype: '1-3-1 Split & Isolation Pick', winCondition: 'Spot isolated side-laners and execute them with Hayabusa.' }
+      },
+      {
+        id: 'fanny', name: 'Fanny', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Steel Cable Mobility / Early Snowball',
+        strengths: ['Unmatched cross-map cable speed for early invades and ganks', 'Explosive early-to-mid game burst snowballs before enemies scale', 'High energy refund when hitting Prey-marked targets'],
+        counters: [ctr('Khufra', 'Bouncing Ball knocks Fanny out of mid-air cable flight'), ctr('Saber', 'Point-and-click suppression stops cable momentum'), ctr('Tigreal', 'CC chains punish mistimed cable entries')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Tough Boots (Ice Retri)', 'Blade of the Heptaseas', 'Hunter Strike', 'Malefic Roar', 'Antique Cuirass', 'Athena’s Shield'],
+        swaps: ['Blade of Despair', 'Sea Halberd', 'Immortality'],
+        combos: [
+          { name: 'Straight-Line Cut Throat', steps: [st('S2', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('S1', 'skill'), st('S2 Exit', 'skill')], tip: 'Apply 2 Prey marks with double cable, immediately cast Cut Throat + S1, then cable out of danger.' },
+          { name: 'Jungle Corridor Tornado', steps: [st('S2', 'skill'), st('S2', 'skill'), st('S1', 'skill'), st('Ult', 'ult')], tip: 'Use tight jungle walls to trigger Tornado Strike repeatedly while conserving energy.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Fanny', mid: 'Valentina', gold: 'Bruno', roam: 'Angela', archetype: 'Early Invade & Snowball', winCondition: 'Invade early buffs with Angela Heartguard and end games before 12 minutes.' }
+      },
+      {
+        id: 'lancelot', name: 'Lancelot', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Dash Resets / Invulnerable Frames',
+        strengths: ['Puncture resets across waves and creeps for slippery chases', 'Thorned Rose and Phantom Execution dodge fatal CC/burst', 'Flexible bruiser or burst assassin itemization'],
+        counters: [ctr('Phoveus', 'Every Puncture dash charges Phoveus Ultimate slams'), ctr('Khufra', 'Bouncing Ball blocks his dash lines'), ctr('Saber', 'Locks Lancelot down between dash resets')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Tough Boots (Ice Retri)', 'War Axe', 'Endless Battle', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair'],
+        swaps: ['Sea Halberd', 'Athena’s Shield', 'Immortality'],
+        combos: [
+          { name: '4-Stack Wave Dive', steps: [st('S1 Creep', 'skill'), st('S1 Hero', 'skill'), st('BA', 'ba'), st('S2', 'skill'), st('Ult', 'ult')], tip: 'Hit distinct targets with S1 to stack Soul Cutter (+30% damage) before landing center S2 and Ult.' },
+          { name: 'CC Dodge Counter', steps: [st('S2 Dodge', 'skill'), st('BA', 'ba'), st('Ult', 'ult'), st('S1', 'skill')], tip: 'Hold Thorned Rose to dodge key stuns, then retaliate immediately.' }
+        ],
+        team: { exp: 'Arlott', jungle: 'Lancelot', mid: 'Kagura', gold: 'Claude', roam: 'Mathilda', archetype: 'High-Mobility Skirmish', winCondition: 'Chain skirmishes around river and turrets using Lancelot and Mathilda mobility.' }
+      },
+      {
+        id: 'ling', name: 'Ling', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Wall-Walk Flank / Critical Reset Burst',
+        strengths: ['Finch Poise lets him traverse walls to flank backlines', 'Tempest of Blades knocks up enemies and drops 4 reset blades', 'Doubled crit chance shreds carries in late-game skirmishes'],
+        counters: [ctr('Khufra', 'Blocks wall leaps and interrupts S2 dashes'), ctr('Saber', 'Locks Ling down right after Tempest of Blades lands'), ctr('Hylos', 'Heavy HP and slow zones punish Ling dives')],
+        emblem: { name: 'Assassin', t1: 'Fatal', t2: 'Seasoned Hunter', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Tough Boots (Ice Retri)', 'Haas’s Claws', 'Berserker’s Fury', 'Endless Battle', 'Malefic Roar', 'Blade of Despair'],
+        swaps: ['Sea Halberd', 'Rose Gold Meteor', 'Immortality'],
+        combos: [
+          { name: '4-Blade Tempest Combo', steps: [st('S1 Wall', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('S2 x4', 'skill'), st('S1', 'skill')], tip: 'Leap off a wall with S2, knock up with Ult, and rapidly dash through all 4 blades to reset S2.' },
+          { name: 'Wall-Drop Crit Poke', steps: [st('S1 Wall', 'skill'), st('S2', 'skill'), st('BA', 'ba'), st('S1', 'skill')], tip: 'Drop onto targets from a wall for guaranteed crits, then hop back onto terrain.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Ling', mid: 'Yve', gold: 'Karrie', roam: 'Angela', archetype: 'Wall-Flank & Hypercarry', winCondition: 'Split side lanes and flank carries with Angela Heartguard during Lord fights.' }
+      },
+      {
+        id: 'joy', name: 'Joy', role: 'Assassin', lane: ['Jungle', 'EXP Lane'],
+        specialty: 'Rhythmic Beat Dashes / AoE Magic Dive',
+        strengths: ['On-beat S2 dashes grant speed, shields, and spell vamp', 'Electrifying Beats bursts deep backlines past frontlines', 'Dominates mid-game Turtle and Lord skirmishes'],
+        counters: [ctr('Phoveus', 'Joy’s 4 rapid dashes trigger nonstop Phoveus Ult slams'), ctr('Khufra', 'Bouncing Ball interrupts beat dashes'), ctr('Hylos', 'Ring of Punishment slows Joy and absorbs burst')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Lethal Ignition', spell: 'Ice Retribution' },
+        build: ['Arcane Boots (Ice Retri)', 'Starlium Scythe', 'Genius Wand', 'Concentrated Energy', 'Divine Glaive', 'Blood Wings'],
+        swaps: ['Glowing Wand', 'Athena’s Shield', 'Immortality'],
+        combos: [
+          { name: 'Full-Beat Electrifying Dive', steps: [st('S1', 'skill'), st('S2 x4', 'skill'), st('Ult', 'ult')], tip: 'Use S1 crystal to start your first beat safely, hit 3 more beats on-rhythm, and unleash Ult.' },
+          { name: 'Fast 3-Beat Skirmish', steps: [st('S2 x3', 'skill'), st('Ult', 'ult'), st('S1', 'skill')], tip: 'Use a 3-beat rhythm when enemies have quick CC and you need immediate Ult damage.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Joy', mid: 'Valentina', gold: 'Beatrix', roam: 'Mathilda', archetype: 'Tempo Dive & Wombo', winCondition: 'Group enemies with Terizla and Mathilda so Joy Electrifying Beats hits all 5.' }
+      },
+      {
+        id: 'saber', name: 'Saber', role: 'Assassin', lane: ['Jungle', 'Roam'],
+        specialty: 'Point-and-Click Suppression / Armor Shred',
+        strengths: ['Triple Sweep suppression cannot be purified', 'Orbiting Swords shred physical defense for reliable one-shots', 'Punishes hyper-mobile assassins and squishy carries'],
+        counters: [ctr('Tigreal', 'Soaks burst and punishes Saber after Ult is spent'), ctr('Diggie', 'Time Journey shields targets and disrupts follow-up'), ctr('Belerick', 'High armor/HP and thorns punish melee dives')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Master Assassin', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Magic Shoes (Ice Retri)', 'Blade of the Heptaseas', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair', 'Sea Halberd'],
+        swaps: ['Immortality', 'Rose Gold Meteor', 'Athena’s Shield'],
+        combos: [
+          { name: 'One-Shot Suppression', steps: [st('S1', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('BA', 'ba')], tip: 'Cast S1 first so orbiting blades fly inward during S2 and Ult for maximum armor shred.' },
+          { name: 'Bush Ambush Save-Dash', steps: [st('S1', 'skill'), st('Ult', 'ult'), st('S2 Exit', 'skill')], tip: 'Hold S2 after Ult when ambushing from fog so you have a dash out.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Saber', mid: 'Yve', gold: 'Brody', roam: 'Khufra', archetype: 'Anti-Carry Lock-Down', winCondition: 'Eliminate the enemy primary carry immediately at the start of every fight.' }
+      },
+      {
+        id: 'nolan', name: 'Nolan', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Fast Jungle Clear / Cosmic Rift Burst',
+        strengths: ['Ultra-fast clear hits level 4 early for aggressive invades', 'Overlapping Cosmic Rifts deal heavy AoE physical burst', 'Fracture cleanses debuffs while dashing backward'],
+        counters: [ctr('Phoveus', 'Cosmic dashes feed Phoveus Ultimate cooldown'), ctr('Khufra', 'Bouncing Ball interrupts his dash engage'), ctr('Tigreal', 'CC chains punish overextended dives')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Killing Spree', spell: 'Ice Retribution' },
+        build: ['Tough Boots (Ice Retri)', 'Hunter Strike', 'Blade of the Heptaseas', 'Malefic Roar', 'Blade of Despair', 'Endless Battle'],
+        swaps: ['Sea Halberd', 'Rose Gold Meteor', 'Immortality'],
+        combos: [
+          { name: 'Triple Rift Detonation', steps: [st('S2', 'skill'), st('BA', 'ba'), st('S1', 'skill'), st('Ult', 'ult')], tip: 'Dash in with S2 + enhanced BA to overlap rifts, trigger with S1, then Ult to detonate and dash out.' },
+          { name: 'Fracture Cleanse Escape', steps: [st('Ult', 'ult'), st('S2', 'skill')], tip: 'Press Ult to cleanse slows/CC and chain S2 to create huge distance.' }
+        ],
+        team: { exp: 'Paquito', jungle: 'Nolan', mid: 'Valentina', gold: 'Granger', roam: 'Mathilda', archetype: 'Early Turtle Snowball', winCondition: 'Dominate early river fights at Level 4 and snowball towers before late game.' }
+      },
+      {
+        id: 'aamon', name: 'Aamon', role: 'Assassin', lane: ['Jungle'],
+        specialty: 'Camouflage Stealth / Shard Execution',
+        strengths: ['Camouflage grants untargetability by basic attacks and speed', 'Endless Shards scales strongly with accumulated blades', 'Quick objective clear and smooth mid-game pick-offs'],
+        counters: [ctr('Khufra', 'Bouncing Ball reveals and knocks him up'), ctr('Ruby', 'Wide AoE scythe pulls Aamon out of stealth'), ctr('Lolita', 'Shield blocks shard projectiles and stuns follow-up')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Lethal Ignition', spell: 'Ice Retribution' },
+        build: ['Arcane Boots (Ice Retri)', 'Starlium Scythe', 'Genius Wand', 'Concentrated Energy', 'Divine Glaive', 'Holy Crystal'],
+        swaps: ['Glowing Wand', 'Athena’s Shield', 'Immortality'],
+        combos: [
+          { name: 'Max-Shard Execution', steps: [st('S2', 'skill'), st('BA', 'ba'), st('S1', 'skill'), st('BA', 'ba'), st('Ult', 'ult')], tip: 'Stack 6+ shards with enhanced basic attacks and S1 before unleashing Endless Shards.' },
+          { name: 'Stealth Extension', steps: [st('S1', 'skill'), st('S2', 'skill')], tip: 'Cast S1 on a creep/minion and immediately S2 away to keep Camouflage active.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Aamon', mid: 'Xavier', gold: 'Moskov', roam: 'Floryn', archetype: 'Stealth Pick & Hypercarry', winCondition: 'Pick off isolated carries in mid game while scaling Moskov and Xavier.' }
+      },
+      {
+        id: 'natalia', name: 'Natalia', role: 'Assassin', lane: ['Roam', 'Jungle'],
+        specialty: 'Camouflage Silence / Bush Ambush',
+        strengths: ['Concealed state and Silence shut down skill-reliant carries', 'Smoke Bomb blocks basic attacks and provides vision cover', 'Punishes unguarded marksmen and mages rotating alone'],
+        counters: [ctr('Tigreal', 'Durable enough to survive ambushes and set AoE stuns'), ctr('Ruby', 'Wide AoE scythe pulls Natalia out of stealth'), ctr('Lolita', 'Shield blocks follow-up hits and stuns her')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Master Assassin', t3: 'Killing Spree', spell: 'Conceal / Retribution' },
+        build: ['Rapid Boots (Conceal)', 'Blade of the Heptaseas', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair', 'Sea Halberd'],
+        swaps: ['Immortality', 'Rose Gold Meteor', 'Athena’s Shield'],
+        combos: [
+          { name: 'Silence Backline Ambush', steps: [st('BA Stealth', 'ba'), st('S1', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('BA', 'ba')], tip: 'Strike from stealth to Silence the carry, drop Smoke Bomb to block basic attacks, and weave S1 + Ult.' },
+          { name: 'Double Dash Escape', steps: [st('S1', 'skill'), st('S1', 'skill'), st('S2', 'skill')], tip: 'Use S1 charges and Smoke Bomb cover to slip out of bad engagements.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Hayabusa', mid: 'Kagura', gold: 'Granger', roam: 'Natalia', archetype: 'Vision Denial & Pick-Off', winCondition: 'Deny enemy sidelane rotation and pick off squishy targets before objectives.' }
+      },
+
+      // --- FIGHTERS (10) ---
+      {
+        id: 'phoveus', name: 'Phoveus', role: 'Fighter', lane: ['EXP Lane'],
+        specialty: 'Anti-Dash Slam Resets / Sustain Bruiser',
+        strengths: ['Punishes dashes, blinks, and knockbacks with rapid Ultimate slams', 'Strong shields, spell vamp, and % HP damage in teamfights', 'Dominates EXP lane matchups and clustered skirmishes'],
+        counters: [ctr('X.Borg', 'True damage melts him without relying on dashes'), ctr('Hylos', 'High HP and sustained damage wear him down'), ctr('Tigreal', 'Heavy CC chains lock him down in teamfights')],
+        emblem: { name: 'Fighter', t1: 'Firmness', t2: 'Festival of Blood', t3: 'Brave Smite', spell: 'Vengeance' },
+        build: ['Tough Boots', 'War Axe', 'Dominance Ice', 'Oracle', 'Queen’s Wings', 'Immortality'],
+        swaps: ['Athena’s Shield', 'Blade Armor', 'Antique Cuirass'],
+        combos: [
+          { name: 'Relentless Slam Chain', steps: [st('BA Dash', 'ba'), st('S2', 'skill'), st('S1', 'skill'), st('Ult', 'ult'), st('S1', 'skill'), st('Ult', 'ult')], tip: 'Lead with empowered basic dash to mark targets, pull with S2 to trigger Ult resets, and weave S1.' },
+          { name: 'Flicker Displacement Setup', steps: [st('S2', 'skill'), st('Flicker', 'spell'), st('Ult', 'ult')], tip: 'Pull grouped enemies with S2 + Flicker to unlock immediate slam chains.' }
+        ],
+        team: { exp: 'Phoveus', jungle: 'Baxia', mid: 'Valentina', gold: 'Bruno', roam: 'Tigreal', archetype: 'Anti-Mobility & Displacement', winCondition: 'Chain knock-ups with Tigreal and Baxia to fuel nonstop Ult slams.' }
+      },
+      {
+        id: 'yu-zhong', name: 'Yu Zhong', role: 'Fighter', lane: ['EXP Lane'],
+        specialty: 'Sha Residue Drain / Black Dragon Dive',
+        strengths: ['Drains HP and heals heavily when triggering 5 Sha Residue stacks', 'Black Dragon Form flies over terrain to zone backlines', 'Strong Level 1–4 lane bully capable of winning 1v2s'],
+        counters: [ctr('Baxia', 'Passive anti-heal cuts Sha Residue healing sharply'), ctr('Dyrroth', '75% armor shred wins early 1v1 brawls'), ctr('Karrie', 'True damage shreds his high Dragonoid HP')],
+        emblem: { name: 'Fighter', t1: 'Thrill', t2: 'Festival of Blood', t3: 'Brave Smite', spell: 'Petrify' },
+        build: ['Tough Boots', 'War Axe', 'Hunter Strike', 'Dominance Ice', 'Oracle', 'Queen’s Wings'],
+        swaps: ['Sea Halberd', 'Athena’s Shield', 'Immortality'],
+        combos: [
+          { name: 'Black Dragon Petrify Dive', steps: [st('Ult', 'ult'), st('Petrify', 'spell'), st('S3', 'skill'), st('S1', 'skill'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Land on backliners in Dragon form, Petrify immediately, and detonate 5 Sha stacks with S3 + S1 + S2.' },
+          { name: 'EXP Level-1 Edge Poke', steps: [st('S1 Edge', 'skill'), st('BA', 'ba'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Hit with the outer blade of S1 and weave basic attacks for early Sha drain.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Helcurt', mid: 'Valentina', gold: 'Claude', roam: 'Mathilda', archetype: 'Backline Dive & Disruption', winCondition: 'Dive enemy backlines in Dragon form so Claude and Helcurt clean up.' }
+      },
+      {
+        id: 'dyrroth', name: 'Dyrroth', role: 'Fighter', lane: ['EXP Lane', 'Jungle'],
+        specialty: '75% Armor Shred / Early 1v1 Duelist',
+        strengths: ['Enhanced S2 shreds up to 75% Physical Defense to melt tanks', 'Lethal early-game 1v1 dueling and Abysm Strike execute', 'Fast snowball potential with Petrify or Flicker'],
+        counters: [ctr('Saber', 'Locks down damage-heavy Dyrroth builds'), ctr('Khufra', 'Bouncing Ball interrupts his dash engage'), ctr('Hylos', 'Sustained HP and slow punish his dive')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Master Assassin', t3: 'Killing Spree', spell: 'Petrify' },
+        build: ['Tough Boots', 'Blade of the Heptaseas', 'Hunter Strike', 'War Axe', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Sea Halberd', 'Athena’s Shield', 'Blade of Despair'],
+        combos: [
+          { name: '75% Shred Execute', steps: [st('S2 Enhanced', 'skill'), st('S1', 'skill'), st('Petrify', 'spell'), st('Ult', 'ult')], tip: 'At 50%+ rage, dash with Enhanced S2 to shred armor, slow with S1, Petrify, and land Abysm Strike.' },
+          { name: 'Level-2 Rage Trade', steps: [st('BA', 'ba'), st('BA', 'ba'), st('S2 Enhanced', 'skill'), st('S1', 'skill')], tip: 'Build rage stacks on minions before engaging for big early trades.' }
+        ],
+        team: { exp: 'Dyrroth', jungle: 'Baxia', mid: 'Kagura', gold: 'Karrie', roam: 'Tigreal', archetype: 'Tank-Buster & Lane Bully', winCondition: 'Crush EXP lane early and shred enemy frontlines with Karrie.' }
+      },
+      {
+        id: 'xborg', name: 'X.Borg', role: 'Fighter', lane: ['EXP Lane', 'Jungle'],
+        specialty: 'True Damage Overheat / Firaga Armor',
+        strengths: ['Overheated Fire Missiles deal AoE True Damage ignoring defenses', 'Firaga Armor acts as a second health bar against burst', 'Last Insanity pulls enemies and detonates for big teamfight damage'],
+        counters: [ctr('Dyrroth', 'Rapid burst strips Firaga Armor quickly'), ctr('Paquito', 'Fast combos pop armor and chase armorless X.Borg'), ctr('Saber', 'Locks down armorless X.Borg easily')],
+        emblem: { name: 'Fighter', t1: 'Thrill', t2: 'Festival of Blood', t3: 'Brave Smite', spell: 'Flicker' },
+        build: ['Tough Boots', 'War Axe', 'Immortality', 'Brute Force Breastplate', 'Oracle', 'Athena’s Shield'],
+        swaps: ['Glowing Wand', 'Hunter Strike', 'Antique Cuirass'],
+        combos: [
+          { name: 'Overheat Flicker Detonation', steps: [st('S1', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('Flicker', 'spell'), st('Ult Pop', 'ult')], tip: 'Heat targets with S1 + S2 pull so Fire Missiles deal True Damage, then spin in with Ult + Flicker to detonate.' },
+          { name: 'Armorless Poke & Pickup', steps: [st('S1', 'skill'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Keep distance when armorless and collect Firaga Supplies to re-armor.' }
+        ],
+        team: { exp: 'X.Borg', jungle: 'Baxia', mid: 'Valentina', gold: 'Claude', roam: 'Angela', archetype: 'Sustained True-Damage Melt', winCondition: 'Shield Firaga Armor with Angela and melt frontlines with True Damage.' }
+      },
+      {
+        id: 'julian', name: 'Julian', role: 'Fighter', lane: ['Jungle', 'EXP Lane', 'Mid Lane'],
+        specialty: 'Level-3 Enhanced Trio / Hybrid Lifesteal',
+        strengths: ['Unlocks all 3 enhanced skills at Level 3 for early skirmish power', 'Strong hybrid lifesteal sustain after casting skills', 'Flexible knock-up, untargetable dash, or sustained scythe combos'],
+        counters: [ctr('Saber', 'Suppression stops Julian before he gets his 3rd skill heal'), ctr('Baxia', 'Built-in anti-heal cuts his hybrid lifesteal'), ctr('Khufra', 'Bouncing Ball blocks Enhanced Sword dash')],
+        emblem: { name: 'Mage', t1: 'Rupture', t2: 'Seasoned Hunter', t3: 'Lethal Ignition', spell: 'Ice Retribution' },
+        build: ['Arcane Boots (Ice Retri)', 'Starlium Scythe', 'Concentrated Energy', 'Genius Wand', 'Divine Glaive', 'Holy Crystal'],
+        swaps: ['Glowing Wand', 'Oracle', 'Immortality'],
+        combos: [
+          { name: 'Enhanced S3 Knock-Up', steps: [st('S2', 'skill'), st('S1', 'skill'), st('Ult (S3)', 'ult'), st('BA', 'ba')], tip: 'Dash with S2, cast S1, and press Enhanced S3 to knock up and burst grouped targets.' },
+          { name: 'Enhanced S2 Tower Dive', steps: [st('S1', 'skill'), st('S2', 'skill'), st('Ult (S2)', 'ult'), st('BA', 'ba')], tip: 'Finish with Enhanced S2 for untargetable dash damage and turret reset.' }
+        ],
+        team: { exp: 'Phoveus', jungle: 'Julian', mid: 'Luo Yi', gold: 'Karrie', roam: 'Mathilda', archetype: 'Level-3 Invade & Brawl', winCondition: 'Win early river fights at Level 3 and snowball skirmishes with Mathilda.' }
+      },
+      {
+        id: 'terizla', name: 'Terizla', role: 'Fighter', lane: ['EXP Lane'],
+        specialty: 'Damage Reduction / AoE Pull Setup',
+        strengths: ['Up to 30% passive damage reduction at low HP makes him very durable', 'Penalty Zone + Flicker pulls multiple enemies for AoE follow-up', 'Strong waveclear and heavy hammer slam damage'],
+        counters: [ctr('X.Borg', 'True damage bypasses Terizla passive damage reduction'), ctr('Karrie', 'True damage and dashes kite his slow hammer swings'), ctr('Faramis', 'Cult Altar counters AoE follow-up burst')],
+        emblem: { name: 'Fighter', t1: 'Firmness', t2: 'Festival of Blood', t3: 'Brave Smite', spell: 'Flicker' },
+        build: ['Tough Boots', 'War Axe', 'Dominance Ice', 'Queen’s Wings', 'Oracle', 'Immortality'],
+        swaps: ['Athena’s Shield', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Penalty Zone Flicker Set', steps: [st('Ult', 'ult'), st('Flicker', 'spell'), st('S2 x3', 'skill'), st('S1', 'skill')], tip: 'Cast Ult and immediately Flicker onto grouped carries before landing all 3 S2 slams.' },
+          { name: 'EXP Wave & Trade', steps: [st('S1', 'skill'), st('S2 x3', 'skill')], tip: 'Tag target with S1 and walk them down with 3 consecutive S2 hammer swings.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Joy', mid: 'Xavier', gold: 'Beatrix', roam: 'Mathilda', archetype: 'AoE Wombo-Combo Engage', winCondition: 'Pull 3+ enemies into Penalty Zone for Xavier, Beatrix, and Joy AoE burst.' }
+      },
+      {
+        id: 'chou', name: 'Chou', role: 'Fighter', lane: ['Roam', 'EXP Lane'],
+        specialty: 'CC-Immune Shunpo / Insec Kick',
+        strengths: ['Shunpo grants brief CC immunity and shield to bait/dodge stuns', 'The Way of Dragon kicks priority carries into your team', 'Plays either Tank Roamer pick-off or Damage EXP split-pusher'],
+        counters: [ctr('Phoveus', 'All 3 S1 hops + Shunpo trigger Phoveus Ult slams'), ctr('Diggie', 'Time Journey frees kicked allies immediately'), ctr('Khufra', 'Bouncing Ball interrupts S1 hops and Shunpo')],
+        emblem: { name: 'Tank', t1: 'Agility', t2: 'Pull Yourself Together', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Rapid Boots (Conceal)', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Blade Armor'],
+        swaps: ['Blade of the Heptaseas', 'Hunter Strike', 'Queen’s Wings'],
+        combos: [
+          { name: 'S1-S1-Flicker-Kick', steps: [st('S1', 'skill'), st('S1', 'skill'), st('Flicker', 'spell'), st('S1 Knock-up', 'skill'), st('S2', 'skill'), st('Ult', 'ult')], tip: 'Pre-stack S1 twice, Flicker for the 3rd knock-up, Shunpo behind, and kick into your team.' },
+          { name: 'Instant Flicker Kick', steps: [st('Ult Kick', 'ult'), st('Flicker', 'spell'), st('Ult Air', 'ult')], tip: 'Start Ult and Flicker behind the target right away to launch them back.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Hayabusa', mid: 'Kagura', gold: 'Beatrix', roam: 'Chou', archetype: 'Single-Target Pick-Off', winCondition: 'Kick isolated carries into Kagura and Beatrix zone damage.' }
+      },
+      {
+        id: 'arlott', name: 'Arlott', role: 'Fighter', lane: ['EXP Lane', 'Roam'],
+        specialty: 'CC-Mark Dash Resets / Sideways Sweep',
+        strengths: ['Vengeance (S2) resets and heals when hitting Demon Gaze marks', 'Final Slash sweeps enemies sideways and marks everyone hit', 'Pairs with any allied CC (Tigreal, Atlas, Ruby) for free marks'],
+        counters: [ctr('Phoveus', 'Rapid S2 dash resets trigger Phoveus Ult slams'), ctr('Diggie', 'Time Journey cleanses CC marks and interrupts chains'), ctr('Khufra', 'Bouncing Ball blocks S2 dash resets')],
+        emblem: { name: 'Fighter', t1: 'Thrill', t2: 'Festival of Blood', t3: 'Brave Smite', spell: 'Petrify' },
+        build: ['Tough Boots', 'War Axe', 'Endless Battle', 'Hunter Strike', 'Dominance Ice', 'Immortality'],
+        swaps: ['Athena’s Shield', 'Sea Halberd', 'Antique Cuirass'],
+        combos: [
+          { name: 'Multi-Reset Mark Chain', steps: [st('Passive', 'ba'), st('S2', 'skill'), st('S1', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('S2', 'skill'), st('Petrify', 'spell'), st('S2', 'skill')], tip: 'Alternate CC/marks with S2 dashes to chain up to 4 resets in a fight.' },
+          { name: 'Flicker Sweep Re-Angle', steps: [st('Ult', 'ult'), st('Flicker', 'spell'), st('S2', 'skill')], tip: 'Flicker behind targets during Ult to drag them toward your squad.' }
+        ],
+        team: { exp: 'Arlott', jungle: 'Baxia', mid: 'Vexana', gold: 'Moskov', roam: 'Atlas', archetype: 'CC-Chain Reset Synergy', winCondition: 'Use Atlas, Baxia, and Vexana CC to feed Arlott endless S2 resets.' }
+      },
+      {
+        id: 'paquito', name: 'Paquito', role: 'Fighter', lane: ['EXP Lane', 'Jungle'],
+        specialty: 'Champ Stance Resets / Uppercut Burst',
+        strengths: ['3 Champ Stance stacks reset basic skill cooldowns for rapid combos', 'Knockout Strike displaces enemies and grants protective shields', 'Strong early-to-mid game 1v1 and skirmish burst'],
+        counters: [ctr('Phoveus', 'Paquito double-dash combos trigger Phoveus Ult slams'), ctr('Khufra', 'Bouncing Ball interrupts Jab and Knockout dashes'), ctr('Hylos', 'High HP and slow disrupt his combo follow-up')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Festival of Blood', t3: 'Killing Spree', spell: 'Flicker' },
+        build: ['Tough Boots', 'Hunter Strike', 'Blade of the Heptaseas', 'War Axe', 'Malefic Roar', 'Immortality'],
+        swaps: ['Blade of Despair', 'Sea Halberd', 'Antique Cuirass'],
+        combos: [
+          { name: 'Double Jab Burst', steps: [st('S2 Enh', 'skill'), st('S2', 'skill'), st('S1', 'skill'), st('Ult', 'ult'), st('S2 Enh', 'skill')], tip: 'Start at 3 stacks and chain skills to reach 3 stacks again for a second Enhanced Jab.' },
+          { name: 'Double Uppercut Chain', steps: [st('Ult Enh', 'ult'), st('Ult', 'ult'), st('S2', 'skill'), st('S1', 'skill')], tip: 'Chain Enhanced Ult + normal Ult to keep targets airborne.' }
+        ],
+        team: { exp: 'Paquito', jungle: 'Nolan', mid: 'Valentina', gold: 'Granger', roam: 'Khufra', archetype: 'Early Skirmish & Dive', winCondition: 'Invade and win early river fights before enemy scaling carries come online.' }
+      },
+      {
+        id: 'edith', name: 'Edith', role: 'Fighter', lane: ['EXP Lane', 'Roam'],
+        specialty: 'Wrath Shockwave CC / Phylax Burst Form',
+        strengths: ['Strong frontline CC with Onward and Earth Shatter stun', 'Primal Wrath converts stored Wrath into rapid magic burst and shields', 'Flexible EXP lane bruiser or secondary frontline tank'],
+        counters: [ctr('Karrie', 'True damage shreds Edith in both tank and Phylax forms'), ctr('Lunox', '% HP magic damage melts her high armor/HP pool'), ctr('Diggie', 'Time Journey cleanses her stun setups')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Tenacity', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Twilight Armor', 'Oracle'],
+        combos: [
+          { name: 'Onward-Flicker-S2-Ult Burst', steps: [st('S1 Charge', 'skill'), st('Flicker', 'spell'), st('S1 Slam', 'skill'), st('S2 Toss', 'skill'), st('Ult', 'ult'), st('S1 Phylax', 'skill'), st('BA', 'ba')], tip: 'Slam and toss targets first to build Wrath, then pop Ult to melt them with rapid attacks.' },
+          { name: 'Toss-and-Stun Peel', steps: [st('S2', 'skill'), st('S1', 'skill')], tip: 'Throw diving fighters behind Edith and knock them up with S1.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Hayabusa', mid: 'Xavier', gold: 'Moskov', roam: 'Mathilda', archetype: 'Frontline CC & Magic Bruiser', winCondition: 'Absorb damage and stun divers before transforming with Primal Wrath.' }
+      },
+
+      // --- MAGES (10) ---
+      {
+        id: 'zhuxin', name: 'Zhuxin', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Lantern Lift Displacement / Zone Control',
+        strengths: ['Lantern Flare lifts and repositions enemy frontlines/carries', 'Crimson Butterflies Ult grants a big shield and AoE Soul Snare lifts', 'Controls chokepoints and Lord/Turtle pits relentlessly'],
+        counters: [ctr('Hayabusa', 'Untargetable slashes dodge Soul Snare stack buildup'), ctr('Fanny', 'Flies past lantern range before full lift stacks build'), ctr('Helcurt', 'Silence and blindness interrupt channeled Lantern Flare')],
+        emblem: { name: 'Mage', t1: 'Agility', t2: 'Bargain Hunter', t3: 'Impure Rage', spell: 'Flicker' },
+        build: ['Demon Shoes', 'Glowing Wand', 'Blood Wings', 'Athena’s Shield', 'Immortality', 'Holy Crystal'],
+        swaps: ['Dominance Ice', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Lantern Lift & Toss', steps: [st('S2 Hold', 'skill'), st('S2 Throw', 'skill'), st('S1', 'skill')], tip: 'Hold S2 until Soul Snares fill, then throw the target backward into your team.' },
+          { name: 'Butterflies Teamfight Dive', steps: [st('Ult', 'ult'), st('S2 Hold', 'skill'), st('S1', 'skill'), st('Flicker', 'spell')], tip: 'Engage with Ult for shield and rapid multi-target Soul Snare lifts.' }
+        ],
+        team: { exp: 'Phoveus', jungle: 'Baxia', mid: 'Zhuxin', gold: 'Claude', roam: 'Mathilda', archetype: 'Displacement & Zone Control', winCondition: 'Lift and toss enemies into Phoveus and Baxia for chained CC.' }
+      },
+      {
+        id: 'lunox', name: 'Lunox', role: 'Mage', lane: ['Mid Lane', 'Jungle'],
+        specialty: '% HP Chaos Burst / Order Invulnerability',
+        strengths: ['Chaos Assault deals % Max HP Magic Damage to shred tanks', 'Order Brilliance makes her untargetable and invulnerable', 'Converts CDR into Magic Penetration or Hybrid Defense'],
+        counters: [ctr('Hayabusa', 'Blinks onto Lunox and forces early defensive Ult'), ctr('Fanny', 'Bursts Lunox quickly before she cycles stances'), ctr('Kagura', 'Out-pokes and purifies slow setups')],
+        emblem: { name: 'Mage', t1: 'Rupture', t2: 'Weapons Master', t3: 'Lethal Ignition', spell: 'Flicker' },
+        build: ['Demon Shoes', 'Genius Wand', 'Concentrated Energy', 'Holy Crystal', 'Blood Wings', 'Immortality'],
+        swaps: ['Glowing Wand', 'Athena’s Shield', 'Dominance Ice'],
+        combos: [
+          { name: 'Darkening Machine-Gun Burst', steps: [st('S3 Slow', 'skill'), st('Ult Dark', 'ult'), st('S2 x3', 'skill'), st('Ult Light', 'ult')], tip: 'Slow with S3, pop Darkening Ult to remove S2 cooldown, spam S2, and swap to Light Ult to escape.' },
+          { name: 'Light-to-Dark Reversal', steps: [st('Ult Light', 'ult'), st('S1', 'skill'), st('Ult Dark', 'ult'), st('S2', 'skill')], tip: 'Dodge enemy burst with Light Ult, then immediately switch to Dark stance to counter-melt.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Lunox', gold: 'Claude', roam: 'Tigreal', archetype: 'Anti-Tank Frontline Shred', winCondition: 'Lock down enemy tanks with Tigreal/Terizla so Lunox melts them.' }
+      },
+      {
+        id: 'valentina', name: 'Valentina', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Ultimate Theft / Double Terrify Reset',
+        strengths: ['I Am You steals enemy Ultimates to turn their own tools against them', 'Double S2 resets S1 rapidly for AoE Terrify crowd control', 'Strong early 2v2 skirmish sustain and mobility'],
+        counters: [ctr('Luo Yi', 'Teleport Ult has lower teamfight theft value and Luo Yi out-bursts'), ctr('Kagura', 'Purifies Terrify CC with umbrella and out-trades'), ctr('Hayabusa', 'Dives Valentina cleanly and dodges Terrify')],
+        emblem: { name: 'Mage', t1: 'Inspire', t2: 'Bargain Hunter', t3: 'Impure Rage', spell: 'Flicker' },
+        build: ['Tough Boots', 'Glowing Wand', 'Blood Wings', 'Holy Crystal', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Dominance Ice', 'Antique Cuirass', 'Genius Wand'],
+        combos: [
+          { name: 'Double Terrify Reset', steps: [st('S1', 'skill'), st('S2', 'skill'), st('S2', 'skill'), st('S1 Terrify', 'skill')], tip: 'Land S1, double-dash with S2 to reduce S1 cooldown, and hit S1 again to Terrify.' },
+          { name: 'Stolen Ult Engage', steps: [st('Ult Steal', 'ult'), st('S2', 'skill'), st('Stolen Ult', 'ult'), st('S1', 'skill')], tip: 'Steal high-impact enemy Ultimates and dash in with S2 to counter-engage.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Joy', mid: 'Valentina', gold: 'Bruno', roam: 'Mathilda', archetype: 'Skirmish & Ultimate Mirror', winCondition: 'Dominate early river fights and turn enemy engage Ults against them.' }
+      },
+      {
+        id: 'xavier', name: 'Xavier', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Global Dawning Light / Wide Root Control',
+        strengths: ['Dawning Light snipes across the map and contests objectives safely', 'Transcendence upgrades S1 + S2 into wide-area immobilizations', 'Elite late-game waveclear and high-ground defense'],
+        counters: [ctr('Hayabusa', 'Dives immobile Xavier easily with Shadow Kill'), ctr('Lancelot', 'Dashes past Mystic Field roots effortlessly'), ctr('Joy', 'Speeds past his root zone and bursts him down')],
+        emblem: { name: 'Mage', t1: 'Inspire', t2: 'Bargain Hunter', t3: 'Lethal Ignition', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Glowing Wand', 'Holy Crystal', 'Blood Wings', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Dominance Ice', 'Antique Cuirass', 'Genius Wand'],
+        combos: [
+          { name: 'S1-Into-S2 Instant Root', steps: [st('S1', 'skill'), st('S2 On Path', 'skill'), st('Ult', 'ult')], tip: 'Fire S1 first and place S2 across its path for an instant wide root before lining up Dawning Light.' },
+          { name: 'Cross-Map Objective Snipe', steps: [st('Ult (Low HP)', 'ult')], tip: 'Track Lord HP and low-HP recalls across lanes to snipe from afar.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Xavier', gold: 'Brody', roam: 'Tigreal', archetype: 'High-Ground & Global Snipe', winCondition: 'Hold enemies in root zones with frontline CC and beam them with Dawning Light.' }
+      },
+      {
+        id: 'nana', name: 'Nana', role: 'Mage', lane: ['Mid Lane', 'Gold Lane'],
+        specialty: 'Molina Morph CC / Molina Gift Passive',
+        strengths: ['Molina morphs enemies into harmless cats to stop dives', 'Passive saves her from fatal burst once on cooldown', 'Safe long-range S1 poke and AoE Molina Gift bursts'],
+        counters: [ctr('Hayabusa', 'Untargetable slashes dodge Molina Gift explosions'), ctr('Lancelot', 'Dashes out of Molina Gift zone easily'), ctr('Lolita', 'Blocks Boomerang S1 and Molina projectiles')],
+        emblem: { name: 'Mage', t1: 'Rupture', t2: 'Bargain Hunter', t3: 'Lethal Ignition', spell: 'Flicker' },
+        build: ['Arcane Boots', 'Glowing Wand', 'Holy Crystal', 'Blood Wings', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Genius Wand', 'Dominance Ice', 'Antique Cuirass'],
+        combos: [
+          { name: 'Molina Gift Burst', steps: [st('S2', 'skill'), st('Ult', 'ult'), st('S1', 'skill')], tip: 'Morph a target with Molina and drop Ult + S1 right on the path.' },
+          { name: 'Safe Poke & Kite', steps: [st('S1', 'skill'), st('S2 (Self)', 'skill')], tip: 'Drop Molina on yourself when a melee fighter dashes in.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Nana', gold: 'Claude', roam: 'Khufra', archetype: 'Anti-Dive & Area Denial', winCondition: 'Deny assassin dives with Molina and zone objectives with Molina Gift.' }
+      },
+      {
+        id: 'yve', name: 'Yve', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Real World Manipulation / Wide Slow Zone',
+        strengths: ['Real World creates a huge slow and tap-or-slide damage arena', 'Void Crystal pokes safely from long range with center burst', 'Strong teamfight control around objectives and high ground'],
+        counters: [ctr('Fanny', 'Flies straight onto Yve while she channels Real World'), ctr('Hayabusa', 'Blinks onto Yve and executes her mid-channel'), ctr('Saber', 'Locks down Yve easily in skirmishes')],
+        emblem: { name: 'Mage', t1: 'Agility', t2: 'Bargain Hunter', t3: 'Impure Rage', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Glowing Wand', 'Blood Wings', 'Holy Crystal', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Dominance Ice', 'Antique Cuirass', 'Genius Wand'],
+        combos: [
+          { name: 'Crystal Slow into Real World', steps: [st('S2', 'skill'), st('S1', 'skill'), st('Ult', 'ult')], tip: 'Slow targets with S2 + S1 first so they cannot walk out of Real World immediately.' },
+          { name: 'Real World Tap Barrage', steps: [st('Ult Tap xN', 'ult'), st('Ult Slide', 'ult')], tip: 'Tap low-HP targets repeatedly and finish with a wide slide across grouped enemies.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Yve', gold: 'Beatrix', roam: 'Tigreal', archetype: 'Teamfight Arena Control', winCondition: 'Anchor teamfights inside Real World while frontliners peel divers.' }
+      },
+      {
+        id: 'kagura', name: 'Kagura', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Umbrella Purify Dash / Backline Pull Burst',
+        strengths: ['Rasho Umbrella Flee acts as a Purify + dash on short cooldown', 'Yin Yang Overturn pulls and bursts squishy backliners', 'Umbrella grants bush vision and safe waveclear'],
+        counters: [ctr('Lancelot', 'Immune frames dodge her pull and burst'), ctr('Helcurt', 'Silence blocks her umbrella flee'), ctr('Hayabusa', 'Trades dashes and executes Kagura if umbrella is down')],
+        emblem: { name: 'Mage', t1: 'Rupture', t2: 'Weapons Master', t3: 'Lethal Ignition', spell: 'Flicker' },
+        build: ['Arcane Boots', 'Genius Wand', 'Holy Crystal', 'Blood Wings', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Glowing Wand', 'Dominance Ice', 'Antique Cuirass'],
+        combos: [
+          { name: 'Umbrella Pull One-Shot', steps: [st('S1', 'skill'), st('Ult Purple', 'ult'), st('S2', 'skill'), st('Ult Blue', 'ult'), st('S1', 'skill')], tip: 'Send umbrella onto carries, tether with Purple Ult, blink in with S2 to stun, and detonate Blue Ult.' },
+          { name: 'CC Purify Counter', steps: [st('S2 Purify', 'skill'), st('S1', 'skill'), st('Ult', 'ult')], tip: 'Use S2 without umbrella to cleanse stuns and immediately counter-burst.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Lancelot', mid: 'Kagura', gold: 'Beatrix', roam: 'Khufra', archetype: 'Skirmish & Backline Pick', winCondition: 'Poke and pick off backline carries in mid-game skirmishes.' }
+      },
+      {
+        id: 'luo-yi', name: 'Luo Yi', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Yin-Yang Pull Burst / Team Teleport',
+        strengths: ['Yin-Yang Reaction pulls clumped enemies together for heavy AoE', 'Diversion teleports the whole team behind enemies for flanks', 'Punishes tightly grouped teamfight compositions'],
+        counters: [ctr('Hayabusa', 'Mobility avoids marks and punishes immobile Luo Yi'), ctr('Diggie', 'Time Journey cleanses marks and interrupts pulls'), ctr('Fanny', 'Dives Luo Yi before pulls detonate')],
+        emblem: { name: 'Mage', t1: 'Rupture', t2: 'Weapons Master', t3: 'Lethal Ignition', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Genius Wand', 'Glowing Wand', 'Holy Crystal', 'Blood Wings', 'Immortality'],
+        swaps: ['Athena’s Shield', 'Dominance Ice', 'Antique Cuirass'],
+        combos: [
+          { name: 'Pre-Primed Triple Pull', steps: [st('S1 Prep', 'skill'), st('S1', 'skill'), st('S2', 'skill'), st('S1 x2', 'skill')], tip: 'Cast S1 into empty air first to hold the opposite polarity, then chain S1 -> opposite S2 -> S1.' },
+          { name: 'Diversion Lord Flank', steps: [st('Ult Flank', 'ult'), st('S1', 'skill'), st('S2', 'skill')], tip: 'Teleport allies into fog behind the enemy backline before a fight.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Helcurt', mid: 'Luo Yi', gold: 'Claude', roam: 'Tigreal', archetype: 'Global Teleport & Flank', winCondition: 'Surprise enemies with Diversion teleports into Lord pits and side lanes.' }
+      },
+      {
+        id: 'vexana', name: 'Vexana', role: 'Mage', lane: ['Mid Lane'],
+        specialty: 'Undead Knight Summon / Terrify Chain CC',
+        strengths: ['Eternal Guard knocks up enemies and tanks turrets or Lord', 'Terrify + Nether Snare locks down diving fighters and assassins', 'Nether Curse explosions punish grouped waves and teams'],
+        counters: [ctr('Fanny', 'Too mobile for delayed skillshots to land reliably'), ctr('Nolan', 'Fast burst deletes Vexana before Knight knock-up lands'), ctr('Diggie', 'Time Journey cleanses Terrify for the team')],
+        emblem: { name: 'Mage', t1: 'Inspire', t2: 'Bargain Hunter', t3: 'Impure Rage', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Glowing Wand', 'Holy Crystal', 'Blood Wings', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Genius Wand', 'Dominance Ice', 'Antique Cuirass'],
+        combos: [
+          { name: 'Terrify + Knight Knock-Up', steps: [st('S1', 'skill'), st('Ult', 'ult'), st('S2', 'skill')], tip: 'Terrify enemies with S1, drop Eternal Guard for knock-up, and detonate S2.' },
+          { name: 'Turret Knight Siege', steps: [st('Ult Tower', 'ult'), st('S2', 'skill')], tip: 'Summon the Undead Knight inside turret range to tank shots while pushing.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Vexana', gold: 'Bruno', roam: 'Tigreal', archetype: 'Chain-CC & Siege Control', winCondition: 'Layer multi-hero CC to protect Bruno and siege towers with the Knight.' }
+      },
+      {
+        id: 'faramis', name: 'Faramis', role: 'Mage', lane: ['Mid Lane', 'Roam'],
+        specialty: 'Cult Altar Revival / Bouncing Soul Burst',
+        strengths: ['Cult Altar grants extra HP and revives allies in teamfights', 'Shadow Stampede pulls enemies and grants movement speed', 'Bouncing Soul hits multiple times against clustered targets'],
+        counters: [ctr('Yve', 'Long-range poke and zone control force early Altar usage'), ctr('Xavier', 'Long-range snipes pressure backline before fights start'), ctr('Valentina', 'Can steal Cult Altar to counter-sustain teamfights')],
+        emblem: { name: 'Support', t1: 'Inspire', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Glowing Wand', 'Holy Crystal', 'Blood Wings', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Dominance Ice', 'Antique Cuirass', 'Genius Wand'],
+        combos: [
+          { name: 'Cult Altar Teamfight Dive', steps: [st('S1', 'skill'), st('S2', 'skill'), st('Ult', 'ult'), st('S1 Pull', 'skill')], tip: 'Pull enemies with S1, bounce S2 through the group, and drop Cult Altar as burst hits.' },
+          { name: 'Double-Bounce Wave & Poke', steps: [st('S1', 'skill'), st('S2', 'skill')], tip: 'Line up S2 bounces across waves and grouped heroes for heavy damage.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Faramis', gold: 'Claude', roam: 'Mathilda', archetype: 'Second-Life Dive & Sustain', winCondition: 'Dive aggressively with Claude and Yu Zhong backed by Cult Altar.' }
+      },
+
+      // --- MARKSMEN (10) ---
+      {
+        id: 'granger', name: 'Granger', role: 'Marksman', lane: ['Gold Lane', 'Jungle'],
+        specialty: 'Energy Rhapsody Poke / Death Sonata Barrage',
+        strengths: ['Rhapsody and Death Sonata poke and execute from long range', 'Strong early-to-mid game burst spike compared to crit marksmen', 'Rondo resets S1 cooldown on hits for agile kiting'],
+        counters: [ctr('Lolita', 'Reflects Rhapsody and Death Sonata barrages'), ctr('Hayabusa', 'Blinks onto Granger and executes with Shadow Kill'), ctr('Belerick', 'Multi-hit bullets trigger nonstop Belerick thorns')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Weapons Master', t3: 'Impure Rage', spell: 'Flicker' },
+        build: ['Tough Boots', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Sea Halberd', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Full Cannon Barrage', steps: [st('S1', 'skill'), st('S2', 'skill'), st('S1', 'skill'), st('Ult x3', 'ult')], tip: 'Fire S1, dash with S2 to reset S1 and boost damage, fire a second S1, and finish with Death Sonata.' },
+          { name: 'Wall-Hug Fast Rockets', steps: [st('Ult (Wall)', 'ult'), st('Ult x2', 'ult')], tip: 'Stand against a wall while firing Ult to cancel knockback and shoot faster.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Nolan', mid: 'Xavier', gold: 'Granger', roam: 'Mathilda', archetype: 'Mid-Game Poke & Snowball', winCondition: 'Poke down enemies with Xavier and Granger before diving with Nolan.' }
+      },
+      {
+        id: 'claude', name: 'Claude', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Hologram Swap Mobility / AoE Blazing Duet',
+        strengths: ['Battle Mirror Image teleports enable safe dives and split-pushes', 'Blazing Duet deals huge AoE damage across entire teams', 'Art of Thievery steals movement and attack speed'],
+        counters: [ctr('Belerick', 'Blazing Duet triggers heavy passive thorn damage'), ctr('Lolita', 'Blocks Blazing Duet bullets with shield'), ctr('Khufra', 'Bouncing Ball interrupts dive and escape swaps')],
+        emblem: { name: 'Marksman', t1: 'Swift', t2: 'Tenacity', t3: 'Quantum Charge', spell: 'Vengeance' },
+        build: ['Tough Boots', 'Demon Hunter Sword', 'Malefic Roar', 'Athena’s Shield', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Sea Halberd', 'Blade Armor', 'Blade of Despair'],
+        combos: [
+          { name: 'Hologram Dive & Recall', steps: [st('S1 x5', 'skill'), st('S2 Place', 'skill'), st('S2 Swap', 'skill'), st('Ult', 'ult'), st('Vengeance', 'spell'), st('S2 Back', 'skill')], tip: 'Build 5 S1 stacks, leave a hologram behind a wall, teleport in with Ult + Vengeance, and swap back.' },
+          { name: 'Safe Split-Push Swap', steps: [st('S2 Bush', 'skill'), st('S2 Swap', 'skill')], tip: 'Place a hologram in a safe bush while clearing side waves.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Faramis', gold: 'Claude', roam: 'Mathilda', archetype: 'Teamfight Wipe & Split-Push', winCondition: 'Dive grouped enemies with Blazing Duet backed by Faramis and Mathilda.' }
+      },
+      {
+        id: 'wanwan', name: 'Wanwan', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Basic-Attack Hops / Untargetable Barrage',
+        strengths: ['Tiger Pace hops after every basic attack for superior kiting', 'Needles in Flowers acts as a built-in Purify cleanse', 'Crossbow of Tang makes her untargetable while wiping teams'],
+        counters: [ctr('Phoveus', 'Every basic-attack hop triggers Phoveus Ult slams'), ctr('Khufra', 'Bouncing Ball interrupts hops and stuns her'), ctr('Hylos', 'Heavy HP and slow zones pressure her kiting')],
+        emblem: { name: 'Marksman', t1: 'Swift', t2: 'Weapons Master', t3: 'Weakness Finder', spell: 'Inspire' },
+        build: ['Demon Hunter Sword', 'Malefic Roar', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Sea Halberd', 'Blade of Despair', 'Dominance Ice'],
+        combos: [
+          { name: '3-Weakness Sky Barrage', steps: [st('S1', 'skill'), st('BA Hop x2', 'ba'), st('Inspire', 'spell'), st('Ult', 'ult')], tip: 'Hit rear weakness with S1, hop to break front/side weaknesses, pop Inspire, and unleash Ult.' },
+          { name: 'Purify Counter-Kite', steps: [st('S2 Purify', 'skill'), st('BA Hop', 'ba'), st('Ult', 'ult')], tip: 'Save S2 to cleanse CC and finish breaking weaknesses safely.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Valentina', gold: 'Wanwan', roam: 'Angela', archetype: 'Kite & Sky Barrage Sweep', winCondition: 'Break weaknesses on frontline tanks safely, then wipe the backline with Ult.' }
+      },
+      {
+        id: 'beatrix', name: 'Beatrix', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: '4-Weapon Versatility / Burst & Siege',
+        strengths: ['Switches between Sniper, Mortar, Shotgun, and SMG for any situation', 'Wesker shotgun deletes diving assassins; Renner snipes from afar', 'Strong Level 1 lane priority with no mana costs'],
+        counters: [ctr('Lolita', 'Reflects SMG and Mortar volleys with shield'), ctr('Ling', 'Flanks over walls before she can switch to Wesker'), ctr('Helcurt', 'Silence and darkness disrupt aiming and swaps')],
+        emblem: { name: 'Assassin', t1: 'Thrill', t2: 'Weapons Master', t3: 'Quantum Charge', spell: 'Flicker' },
+        build: ['Swift Boots', 'Blade of Despair', 'Hunter Strike', 'Malefic Roar', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Sea Halberd', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Wesker Bush 4-Shot', steps: [st('BA Wesker', 'ba'), st('Ult Wesker', 'ult'), st('S2 Reload', 'skill'), st('BA Wesker', 'ba')], tip: 'Ambush close range with Wesker basic -> shotgun Ult -> S2 reload -> basic attack.' },
+          { name: 'Renner Sniper Double-Tap', steps: [st('Ult Renner', 'ult'), st('BA Renner', 'ba'), st('S2', 'skill')], tip: 'Snipe low targets with Renner Ult and follow up with an aimed shot.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Hayabusa', mid: 'Yve', gold: 'Beatrix', roam: 'Tigreal', archetype: 'Siege & Flexible Burst', winCondition: 'Poke and siege towers with Mortar/Renner while Tigreal holds the front.' }
+      },
+      {
+        id: 'brody', name: 'Brody', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Move-While-Attacking / 4-Mark Execute',
+        strengths: ['Moves freely during basic attack windups for dominant early trades', 'Corrosive Strike dashes, stuns, and vaults backward', 'Torn-Apart Memory executes low-HP targets at 4 Abyss Marks'],
+        counters: [ctr('Hayabusa', 'Untargetable slashes dodge Torn-Apart Memory'), ctr('Lolita', 'Shield blocks Brody basic attacks and S1 shockwaves'), ctr('Ling', 'Closes gap over walls faster than Brody attack cadence')],
+        emblem: { name: 'Assassin', t1: 'Rupture', t2: 'Weapons Master', t3: 'Quantum Charge', spell: 'Flicker' },
+        build: ['Tough Boots', 'Blade of the Heptaseas', 'Hunter Strike', 'Malefic Roar', 'Blade of Despair', 'Immortality'],
+        swaps: ['Athena’s Shield', 'Antique Cuirass', 'Sea Halberd'],
+        combos: [
+          { name: '4-Stack Lane Execute', steps: [st('S1', 'skill'), st('BA', 'ba'), st('S2 Stun', 'skill'), st('BA', 'ba'), st('Ult', 'ult')], tip: 'Pierce minions + enemy with S1 for fast stacks, stun with S2, and execute with Ult.' },
+          { name: 'Wall-Vault Escape', steps: [st('S2 Target', 'skill'), st('Flicker', 'spell')], tip: 'Cast S2 on an enemy or creep near thin walls to vault to safety.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Nolan', mid: 'Xavier', gold: 'Brody', roam: 'Khufra', archetype: 'Gold Lane Bully & Tempo', winCondition: 'Win Gold Lane early, take turret plates, and rotate for objectives.' }
+      },
+      {
+        id: 'karrie', name: 'Karrie', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: '% Max HP True Damage / Tank Shredder',
+        strengths: ['Lightwheel Mark deals % Max HP True Damage to melt tanks', 'Low-cooldown Phantom Step dash enables nonstop kiting', 'Thrives with durable defense items to survive dives'],
+        counters: [ctr('Yve', 'Long-range poke and slow zones kite short-ranged Karrie'), ctr('Xavier', 'Long-range roots and lasers out-range Karrie'), ctr('Hayabusa', 'Dives and bursts Karrie quickly in skirmishes')],
+        emblem: { name: 'Marksman', t1: 'Swift', t2: 'Tenacity', t3: 'Quantum Charge', spell: 'Flicker' },
+        build: ['Swift Boots', 'Demon Hunter Sword', 'Malefic Roar', 'Athena’s Shield', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Sea Halberd', 'Blade Armor', 'Blade of Despair'],
+        combos: [
+          { name: 'Dual Lightwheel Shred', steps: [st('Ult', 'ult'), st('S1', 'skill'), st('BA', 'ba'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Pop Ult so basic attacks throw twin lightwheels and trigger True Damage rapidly.' },
+          { name: 'Wall-Hop Kite', steps: [st('S2 Wall', 'skill'), st('S1', 'skill'), st('BA', 'ba')], tip: 'Hop thin walls with Phantom Step to stay out of melee reach.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Valentina', gold: 'Karrie', roam: 'Estes', archetype: 'Anti-Tank Front-to-Back', winCondition: 'Melt enemy tank frontlines with True Damage while Estes and Terizla peel.' }
+      },
+      {
+        id: 'irithel', name: 'Irithel', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Mobile Basic Attacks / Heavy Leap AoE',
+        strengths: ['Shoots basic attacks while moving and riding Leo', 'Heavy Boot leap boosts basic attack AoE and defense shred', 'Strong mid-to-late game AoE crit damage'],
+        counters: [ctr('Saber', 'Suppression locks down Irithel mid-leap'), ctr('Khufra', 'Bouncing Ball interrupts her leap and kiting'), ctr('Tigreal', 'CC chains punish her dive range')],
+        emblem: { name: 'Marksman', t1: 'Fatal', t2: 'Weapons Master', t3: 'Quantum Charge', spell: 'Sprint' },
+        build: ['Swift Boots', 'Berserker’s Fury', 'Blade of Despair', 'Malefic Roar', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Sea Halberd', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Heavy Boot AoE Crit', steps: [st('Ult', 'ult'), st('S2', 'skill'), st('S1', 'skill'), st('BA Kite', 'ba')], tip: 'Leap onto grouped targets with Ult, shred armor with S2 and S1, and kite while firing.' },
+          { name: 'Armor Shred Lane Poke', steps: [st('S2', 'skill'), st('S1', 'skill'), st('BA', 'ba')], tip: 'Land S2 and S1 to reduce target physical defense before trading shots.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Valentina', gold: 'Irithel', roam: 'Angela', archetype: 'Mobile AoE Crit Carry', winCondition: 'Kite teamfights with Sprint and Angela buffs while dealing AoE crits.' }
+      },
+      {
+        id: 'moskov', name: 'Moskov', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Global Spear Teleport / Wall-Pin Stun',
+        strengths: ['Spear of Destruction teleports Moskov behind any enemy hit', 'Spear of Misery pins targets into walls and basic attacks cut dash CDs', 'Piercing basic attacks shred enemies lined up in corridors'],
+        counters: [ctr('Belerick', 'Taunt + Thorns punish Moskov rapid attack speed'), ctr('Lolita', 'Blocks piercing spears and global Ult'), ctr('Saber', 'Locks down short-range Moskov before dash escape')],
+        emblem: { name: 'Marksman', t1: 'Swift', t2: 'Tenacity', t3: 'Quantum Charge', spell: 'Inspire' },
+        build: ['Swift Boots', 'Demon Hunter Sword', 'Malefic Roar', 'Athena’s Shield', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Sea Halberd', 'Blade Armor', 'Blade of Despair'],
+        combos: [
+          { name: 'Global Spear Ambush', steps: [st('Ult Hit', 'ult'), st('Ult TP', 'ult'), st('S1', 'skill'), st('S2 Wall', 'skill'), st('Inspire', 'spell'), st('BA', 'ba')], tip: 'Hit a target with Ult, teleport behind them, dash with S1, and pin them into a wall with S2.' },
+          { name: 'Dash-Reset Kiting', steps: [st('S1', 'skill'), st('BA x2', 'ba'), st('S2', 'skill'), st('S1', 'skill')], tip: 'Basic attacks reduce S1/S2 cooldowns—keep attacking to refresh dashes.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Xavier', gold: 'Moskov', roam: 'Angela', archetype: 'Global Collapse & Split-Push', winCondition: 'Split side lanes safely and teleport into fights when Xavier spots a pick.' }
+      },
+      {
+        id: 'melissa', name: 'Melissa', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Muddles Doll Link / Go Away! Dive Zone',
+        strengths: ['Muddles links enemies so basic attacks on the doll hit them too', 'Go Away! creates a barrier that pushes back dashing melee fighters', 'Strong lane duelist against short-range and melee-heavy drafts'],
+        counters: [ctr('Yve', 'Long-range poke and zone control out-range Muddles'), ctr('Xavier', 'Long-range roots and lasers out-range her doll'), ctr('Hayabusa', 'Blinks in and bursts Melissa cleanly')],
+        emblem: { name: 'Marksman', t1: 'Swift', t2: 'Weapons Master', t3: 'Weakness Finder', spell: 'Inspire' },
+        build: ['Swift Boots', 'Demon Hunter Sword', 'Malefic Roar', 'Athena’s Shield', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Sea Halberd', 'Blade Armor', 'Blade of Despair'],
+        combos: [
+          { name: 'Doll Link Inspire Melt', steps: [st('S2', 'skill'), st('S1', 'skill'), st('Inspire', 'spell'), st('BA', 'ba')], tip: 'Attach Muddles to the target, dash with S1 to boost attack speed, and spam basic attacks.' },
+          { name: 'Anti-Dive Barrier', steps: [st('Ult', 'ult'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Pop Go Away! when fighters/assassins dash in to keep them outside.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Vexana', gold: 'Melissa', roam: 'Atlas', archetype: 'Anti-Dive & Doll Link DPS', winCondition: 'Deny melee divers with Go Away! and melt linked targets.' }
+      },
+      {
+        id: 'bruno', name: 'Bruno', role: 'Marksman', lane: ['Gold Lane'],
+        specialty: 'Powerball Crit Burst / Bouncing Ult',
+        strengths: ['Powerball deals high crit damage and bounces to nearby targets', 'Wave of the World bounces between enemies to shred armor', 'Strong early-to-late crit damage when catching Powerballs'],
+        counters: [ctr('Lolita', 'Shield blocks Powerballs and bouncing Ult shots'), ctr('Hayabusa', 'Dives and bursts Bruno quickly'), ctr('Belerick', 'High crit hits trigger Belerick thorns')],
+        emblem: { name: 'Marksman', t1: 'Fatal', t2: 'Weapons Master', t3: 'Quantum Charge', spell: 'Flicker' },
+        build: ['Swift Boots', 'Berserker’s Fury', 'Blade of Despair', 'Malefic Roar', 'Athena’s Shield', 'Immortality'],
+        swaps: ['Sea Halberd', 'Antique Cuirass', 'Blade Armor'],
+        combos: [
+          { name: 'Powerball Bounce Burst', steps: [st('S1', 'skill'), st('BA', 'ba'), st('S2', 'skill'), st('Ult', 'ult'), st('BA', 'ba')], tip: 'Kick Powerball, shoot, slide with S2 to stun, and bounce Ult + basic attacks.' },
+          { name: 'Ball-Catch Kite', steps: [st('S1', 'skill'), st('BA', 'ba'), st('S2 Catch', 'skill')], tip: 'Position your S2 slide to catch bouncing Powerballs smoothly.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Valentina', gold: 'Bruno', roam: 'Tigreal', archetype: 'Crit Burst & Skirmish', winCondition: 'Win early Gold Lane trades with Powerball crits and scale into teamfights.' }
+      },
+
+      // --- TANKS (7) ---
+      {
+        id: 'tigreal', name: 'Tigreal', role: 'Tank', lane: ['Roam'],
+        specialty: 'Implosion + Flicker / Multi-Man CC',
+        strengths: ['Implosion + Flicker pulls and stuns entire teams for big setups', 'Sacred Hammer pushes targets into danger or resets jungle buffs', 'Passive blocks every 4th basic attack or turret hit'],
+        counters: [ctr('Diggie', 'Time Journey immediately cleanses Implosion pull and stun'), ctr('Valentina', 'Steals Implosion and turns it back on his team'), ctr('Faramis', 'Cult Altar revives allies caught in Implosion')],
+        emblem: { name: 'Tank', t1: 'Firmness', t2: 'Pull Yourself Together', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Conceal Implosion Flicker', steps: [st('Conceal', 'spell'), st('Ult', 'ult'), st('Flicker', 'spell'), st('S2 Back', 'skill'), st('S2 Up', 'skill'), st('S1', 'skill')], tip: 'Cast Ult first and Flicker onto grouped targets right as the pull lands, then push into your team.' },
+          { name: 'Early Buff Reset', steps: [st('S2 Creep', 'skill')], tip: 'Push enemy jungle buffs out of their pit early to reset HP and delay clear.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Nolan', mid: 'Yve', gold: 'Beatrix', roam: 'Tigreal', archetype: '5-Man Wombo-Combo Engage', winCondition: 'Group enemies with Implosion + Flicker so Yve and Beatrix wipe them.' }
+      },
+      {
+        id: 'khufra', name: 'Khufra', role: 'Tank', lane: ['Roam'],
+        specialty: 'Anti-Dash Bouncing Ball / Long Leap Engage',
+        strengths: ['Bouncing Ball knocks down enemies using dash or blink skills', 'Tyrant’s Revenge provides long-range fog-of-war knock-up engages', 'Tyrant’s Rage stuns enemies slammed into walls'],
+        counters: [ctr('Diggie', 'Time Journey cleanses his leap and wall-slam CC'), ctr('Karrie', 'True damage melts Khufra during Bouncing Ball'), ctr('Lunox', '% HP magic damage shreds his defense')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Pull Yourself Together', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Leap-Flicker Wall Slam', steps: [st('S1 Charge', 'skill'), st('Flicker', 'spell'), st('Ult Wall', 'ult'), st('S2', 'skill')], tip: 'Charge S1 from fog, redirect with Flicker, slam targets into terrain with Ult, and bounce with S2.' },
+          { name: 'Anti-Dash Carry Guard', steps: [st('S2 Near Carry', 'skill')], tip: 'Activate Bouncing Ball in front of your carry whenever assassins dive.' }
+        ],
+        team: { exp: 'Paquito', jungle: 'Nolan', mid: 'Kagura', gold: 'Brody', roam: 'Khufra', archetype: 'Anti-Mobility & Wall Engage', winCondition: 'Shut down enemy dash carries and set wall slams for burst follow-up.' }
+      },
+      {
+        id: 'belerick', name: 'Belerick', role: 'Tank', lane: ['Roam', 'EXP Lane'],
+        specialty: 'Deadly Thorns Reflect / AoE Taunt Root',
+        strengths: ['Passive thorns strike back when taking damage and scale with bonus HP', 'Wrath of Thorns taunts enemies and forces them to attack him', 'Nature’s Seed roots and slows surrounding targets'],
+        counters: [ctr('Karrie', 'True damage melts Belerick while avoiding thorn triggers'), ctr('Lunox', '% HP magic damage shreds high-HP frontlines'), ctr('Xavier', 'Long-range poke and roots kite Belerick safely')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Tenacity', t3: 'Concussive Blast', spell: 'Vengeance' },
+        build: ['Tough Boots', 'Blade Armor', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Vengeance + Taunt Thorn Burst', steps: [st('Conceal', 'spell'), st('S2', 'skill'), st('Ult Taunt', 'ult'), st('Vengeance', 'spell'), st('S1', 'skill')], tip: 'Dash in, taunt grouped attackers with Ult, and activate Vengeance + Blade Armor to reflect damage.' },
+          { name: 'Root & Heal Trade', steps: [st('S1', 'skill'), st('S2', 'skill'), st('BA', 'ba')], tip: 'Root targets with S1 and heal with enhanced S2 basic attacks.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Xavier', gold: 'Moskov', roam: 'Belerick', archetype: 'Anti-Marksman Thorn Wall', winCondition: 'Punish attack-speed marksmen with Taunt + Vengeance while Moskov deals free DPS.' }
+      },
+      {
+        id: 'lolita', name: 'Lolita', role: 'Tank', lane: ['Roam'],
+        specialty: 'Projectile Shield Reflect / Noumenon Blast Stun',
+        strengths: ['Guardian’s Bulwark blocks and reflects enemy projectiles', 'Noumenon Blast delivers a wide-area stun after a short charge', 'Grants shields to nearby allies to absorb poke'],
+        counters: [ctr('Diggie', 'Time Journey cleanses Noumenon Blast stun'), ctr('Yu Zhong', 'Melee Dragon dive bypasses her projectile shield'), ctr('Phoveus', 'Punishes dash entries and disrupts setups')],
+        emblem: { name: 'Tank', t1: 'Firmness', t2: 'Pull Yourself Together', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Charge-Flicker Noumenon Stun', steps: [st('Ult Charge', 'ult'), st('Flicker', 'spell'), st('Ult Release', 'ult'), st('S1', 'skill')], tip: 'Start charging Ult out of sight and Flicker into enemies right before releasing the stun.' },
+          { name: 'Projectile Reflection', steps: [st('S2 Shield', 'skill'), st('S1 Stun', 'skill')], tip: 'Raise Guardian’s Bulwark against Granger, Beatrix, or Bruno barrages.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Xavier', gold: 'Bruno', roam: 'Lolita', archetype: 'Projectile Counter & Stun Setup', winCondition: 'Negate ranged/projectile damage and land Noumenon Blast stuns.' }
+      },
+      {
+        id: 'baxia', name: 'Baxia', role: 'Tank', lane: ['Jungle', 'Roam'],
+        specialty: 'Built-In Anti-Heal / Baxia-Shield Roll',
+        strengths: ['Passive reduces enemy healing and shield regeneration by 50%', 'Baxia-Shield Roll gives fast map rotation and knock-up engage', 'Strong early jungle clear and anti-sustain counter'],
+        counters: [ctr('Karrie', 'True damage shreds Baxia despite his damage reduction'), ctr('Lunox', 'Chaos Assault melts high-HP targets quickly'), ctr('X.Borg', 'True damage bypasses his damage reduction')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Seasoned Hunter', t3: 'Concussive Blast', spell: 'Bloody Retribution' },
+        build: ['Tough Boots (Bloody Retri)', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Roll Knock-Up & Lava Burn', steps: [st('S1 Roll', 'skill'), st('S1 Knock-up', 'skill'), st('Ult', 'ult'), st('S2 x2', 'skill')], tip: 'Roll in with S1 to knock up, pop Ult for lava trail and damage reduction, and spam S2.' },
+          { name: 'Fast Gank Rotation', steps: [st('S1 Roll', 'skill'), st('S2', 'skill')], tip: 'Use S1 across river and jungle camps to arrive first at skirmishes.' }
+        ],
+        team: { exp: 'Dyrroth', jungle: 'Baxia', mid: 'Yve', gold: 'Karrie', roam: 'Tigreal', archetype: 'Anti-Sustain & Fast Tempo', winCondition: 'Shut down healing/sustain compositions early and snowball objectives.' }
+      },
+      {
+        id: 'atlas', name: 'Atlas', role: 'Tank', lane: ['Roam'],
+        specialty: 'Fatal Links AoE Pull / Fast Mecha Dash',
+        strengths: ['Fatal Links tethers and pulls multiple enemies in a wide circle', 'Ejected State gives high movement speed for surprise engages', 'Strong multi-man teamfight initiation'],
+        counters: [ctr('Diggie', 'Time Journey immediately cleanses Fatal Links pull and stun'), ctr('Faramis', 'Cult Altar gives teammates a second life after Fatal Links'), ctr('Valentina', 'Can steal Fatal Links to counter-engage')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Pull Yourself Together', t3: 'Concussive Blast', spell: 'Flicker' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Mecha-Flicker Fatal Links', steps: [st('S2', 'skill'), st('S2 Rejoin (Stun)', 'skill'), st('Ult', 'ult'), st('Flicker', 'spell'), st('Ult Pull', 'ult')], tip: 'Dash in with S2, stun on rejoining mecha, cast Ult and Flicker behind targets to pull them back.' },
+          { name: 'Annihilate Shockwave', steps: [st('S2', 'skill'), st('S1', 'skill'), st('BA', 'ba')], tip: 'Pair S1 shockwaves with S2 stun for solid early skirmish damage.' }
+        ],
+        team: { exp: 'Arlott', jungle: 'Baxia', mid: 'Xavier', gold: 'Granger', roam: 'Atlas', archetype: 'AoE Pull & Follow-Up Combo', winCondition: 'Pull grouped enemies with Fatal Links into Arlott, Xavier, and Granger AoE.' }
+      },
+      {
+        id: 'hylos', name: 'Hylos', role: 'Tank', lane: ['Roam', 'EXP Lane'],
+        specialty: 'Ring of Punishment Slow / High-HP Frontline',
+        strengths: ['Huge HP pool and Ring of Punishment DPS/slow zone frontline fights', 'Law and Order stuns priority targets on a low cooldown', 'Glorious Pathway speeds up the whole team for engages or escapes'],
+        counters: [ctr('Karrie', 'True damage melts Hylos high HP pool quickly'), ctr('Lunox', '% HP magic damage shreds Hylos in seconds'), ctr('X.Borg', 'True damage bypasses armor and burns through his HP')],
+        emblem: { name: 'Tank', t1: 'Vitality', t2: 'Tenacity', t3: 'Concussive Blast', spell: 'Vengeance' },
+        build: ['Tough Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Blade Armor', 'Immortality'],
+        swaps: ['Radiant Armor', 'Guardian Helmet', 'Twilight Armor'],
+        combos: [
+          { name: 'Pathway Engage & Ring Melt', steps: [st('Ult', 'ult'), st('S2', 'skill'), st('S1 Stun', 'skill'), st('Vengeance', 'spell')], tip: 'Lay down Glorious Pathway, activate Ring of Punishment, and stun priority targets with S1.' },
+          { name: 'Frontline Kite & Stun', steps: [st('S2', 'skill'), st('S1', 'skill')], tip: 'Toggle S2 carefully with mana and stun divers trying to reach your backline.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Baxia', mid: 'Xavier', gold: 'Moskov', roam: 'Hylos', archetype: 'Frontline Sustain & Chase', winCondition: 'Run over enemies with Glorious Pathway and frontline while Moskov and Xavier deal damage.' }
+      },
+
+      // --- SUPPORTS (5) ---
+      {
+        id: 'diggie', name: 'Diggie', role: 'Support', lane: ['Roam'],
+        specialty: 'AoE CC Cleanse Ult / Egg Vision & Bombs',
+        strengths: ['Time Journey cleanses all CC for nearby allies and grants shields', 'Neutralizes heavy tank initiators like Tigreal, Atlas, and Khufra', 'Egg form scouts bushes safely and interrupts recalls'],
+        counters: [ctr('Helcurt', 'Silence blocks Time Journey and bursts Diggie quickly'), ctr('Hayabusa', 'Non-CC burst assassin deletes Diggie easily'), ctr('Fanny', 'Cables in and kills Diggie with raw speed and damage')],
+        emblem: { name: 'Support', t1: 'Inspire', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Glowing Wand'],
+        swaps: ['Blade Armor', 'Radiant Armor', 'Blood Wings'],
+        combos: [
+          { name: 'Counter-Engage Cleanse', steps: [st('Ult Cleanse', 'ult'), st('S2 Snare', 'skill'), st('S1', 'skill')], tip: 'Pop Time Journey right as enemy tank CC lands, then pull back a diver with S2.' },
+          { name: 'Bush Bomb Trap', steps: [st('S1 x3', 'skill')], tip: 'Stack bombs in river/objective bushes ahead of fights to chunk enemies.' }
+        ],
+        team: { exp: 'Edith', jungle: 'Baxia', mid: 'Xavier', gold: 'Moskov', roam: 'Diggie', archetype: 'Anti-CC Hypercarry Protect', winCondition: 'Cleanse enemy engage CC so Moskov and Xavier deal uninterrupted DPS.' }
+      },
+      {
+        id: 'mathilda', name: 'Mathilda', role: 'Support', lane: ['Roam', 'Mid Lane'],
+        specialty: 'Guiding Wind Dash Taxi / Circling Eagle',
+        strengths: ['Guiding Wind pulls allies to Mathilda with shields and speed', 'Circling Eagle knocks up enemies and enables deep picks', 'High early-game burst and mobility for fast rotations'],
+        counters: [ctr('Khufra', 'Bouncing Ball blocks Circling Eagle dash path'), ctr('Phoveus', 'Repeated dashes feed Phoveus Ult slams'), ctr('Tigreal', 'CC chains punish overextended Circling Eagle dives')],
+        emblem: { name: 'Support', t1: 'Agility', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Flicker' },
+        build: ['Rapid Boots', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Glowing Wand'],
+        swaps: ['Blade Armor', 'Radiant Armor', 'Blood Wings'],
+        combos: [
+          { name: 'Eagle Knock-Up & Taxi', steps: [st('S1', 'skill'), st('Ult', 'ult'), st('Ult Slam', 'ult'), st('S2 Ally', 'skill')], tip: 'Charge S1 wisps, fly in with Ult to knock up, and drop S2 so teammates can dash in or out.' },
+          { name: 'Quick Escape Taxi', steps: [st('S2', 'skill'), st('S1', 'skill')], tip: 'Leave S2 near a teammate to give them a free reposition out of danger.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Joy', mid: 'Valentina', gold: 'Claude', roam: 'Mathilda', archetype: 'High-Tempo Mobility & Dive', winCondition: 'Win early river fights with fast rotations and taxi teammates into/out of dives.' }
+      },
+      {
+        id: 'estes', name: 'Estes', role: 'Support', lane: ['Roam'],
+        specialty: 'Moonlight Immersion Link / AoE Heal Ult',
+        strengths: ['Moonlight Immersion tether heals and slows enemies continuously', 'Blessing of Moon Goddess heals nearby allies massively in teamfights', 'Dominates grouped deathball pushes and objective fights'],
+        counters: [ctr('Luo Yi', 'Yin-Yang pulls punish tightly grouped Estes deathballs'), ctr('Xavier', 'Long-range roots and lasers poke grouped targets safely'), ctr('Baxia', 'Built-in anti-heal cuts sustain heavily')],
+        emblem: { name: 'Support', t1: 'Inspire', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Sprint' },
+        build: ['Magic Shoes', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Glowing Wand'],
+        swaps: ['Blade Armor', 'Radiant Armor', 'Blood Wings'],
+        combos: [
+          { name: 'Deathball Heal & Slow', steps: [st('S1 Link', 'skill'), st('S2 Slow', 'skill'), st('Ult Heal', 'ult')], tip: 'Tether your main carry with S1, slow enemies with S2, and pop Ult as team HP drops.' },
+          { name: 'Safe Backline Positioning', steps: [st('S2', 'skill'), st('S1', 'skill')], tip: 'Stay behind your frontline so you do not get caught first.' }
+        ],
+        team: { exp: 'Terizla', jungle: 'Baxia', mid: 'Yve', gold: 'Claude', roam: 'Estes', archetype: '5-Man Deathball Sustain', winCondition: 'Group tightly behind Terizla and Baxia to push towers and take Lord uncontested.' }
+      },
+      {
+        id: 'angela', name: 'Angela', role: 'Support', lane: ['Roam'],
+        specialty: 'Heartguard Possess / Speed & Slow CC',
+        strengths: ['Heartguard attaches to any ally anywhere on the map with shields', 'Puppet-on-a-String slows and immobilizes chased targets', 'Supercharges aggressive junglers, fighters, and marksmen'],
+        counters: [ctr('Valentina', 'Steals Heartguard and turns Angela utility back on her team'), ctr('Khufra', 'Interrupts dive allies Angela attaches to'), ctr('Diggie', 'Time Journey cleanses Angela Puppet-on-a-String CC')],
+        emblem: { name: 'Support', t1: 'Agility', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Flicker' },
+        build: ['Magic Shoes', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Glowing Wand'],
+        swaps: ['Blade Armor', 'Radiant Armor', 'Blood Wings'],
+        combos: [
+          { name: 'Heartguard Dive & Puppet Lock', steps: [st('Ult Ally', 'ult'), st('S1 x2', 'skill'), st('S2', 'skill'), st('S1 x2', 'skill')], tip: 'Attach to your diving carry with Ult, stack S1 heals/damage, and attach S2 to immobilize the target.' },
+          { name: 'Lover Mark Burst', steps: [st('S1', 'skill'), st('S2', 'skill'), st('S1', 'skill')], tip: 'Trigger Lover’s Mark damage and heal before disengaging.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Fanny', mid: 'Valentina', gold: 'Bruno', roam: 'Angela', archetype: 'Hyper-Dive Pocket Support', winCondition: 'Attach Heartguard onto Fanny or Bruno to dive backlines and snowball leads.' }
+      },
+      {
+        id: 'rafaela', name: 'Rafaela', role: 'Support', lane: ['Roam'],
+        specialty: 'Holy Healing Speed / Light Retribution Slow',
+        strengths: ['Holy Healing boosts team movement speed and heals HP', 'Light Retribution pokes, reveals, and slows approaching enemies', 'Strong disengage and chase speed for mobile skirmishes'],
+        counters: [ctr('Hayabusa', 'Dives and bursts Rafaela quickly'), ctr('Fanny', 'Closes distance faster than Rafaela can peel'), ctr('Saber', 'Suppression eliminates Rafaela cleanly')],
+        emblem: { name: 'Support', t1: 'Agility', t2: 'Pull Yourself Together', t3: 'Focusing Mark', spell: 'Sprint' },
+        build: ['Magic Shoes', 'Dominance Ice', 'Athena’s Shield', 'Antique Cuirass', 'Immortality', 'Glowing Wand'],
+        swaps: ['Blade Armor', 'Radiant Armor', 'Blood Wings'],
+        combos: [
+          { name: 'Speed Engage & Stun Line', steps: [st('S2 Speed', 'skill'), st('S1', 'skill'), st('Ult Stun', 'ult')], tip: 'Boost team speed with S2, slow targets with S1, and stun a line of enemies with Ult.' },
+          { name: 'Bush Scout & Slow', steps: [st('S1', 'skill'), st('S2', 'skill')], tip: 'Use S1 to check bushes and slow chasers while retreating.' }
+        ],
+        team: { exp: 'Yu Zhong', jungle: 'Nolan', mid: 'Xavier', gold: 'Granger', roam: 'Rafaela', archetype: 'Fast Rotation & Disengage', winCondition: 'Rotate quickly across lanes with speed buffs and kite enemy engages.' }
+      }
+    ];
+
+    // Enforce strictly 52 heroes and deduplicated valid counter references
+    const VALID_HERO_NAMES = new Set(HEROES.map(h => h.name));
+    HEROES.forEach(hero => {
+      const seen = new Set();
+      hero.counters = hero.counters.filter(c => {
+        if (!VALID_HERO_NAMES.has(c.hero) || seen.has(c.hero)) return false;
+        seen.add(c.hero);
+        return true;
+      });
+    });
+
+    // =========================================================================
+    // 3. APPLICATION STATE
+    // =========================================================================
+    const ROLES = ['All', 'Assassin', 'Fighter', 'Mage', 'Marksman', 'Tank', 'Support'];
+
+    const state = {
+      activeTab: 'draft',          // 'draft' | 'emblems'
+      enemyCounter: '',          // Enemy hero name to find counters for
+      search: '',                // Search query
+      role: 'All',               // Role filter pill
+      lane: 'All Lanes',         // Lane filter dropdown
+      talent: '',                // Tier 3 Core Talent filter dropdown
+      selectedHeroId: 'helcurt', // Default selected hero on load
+      inspectorTab: 'overview'   // 'overview' | 'combos' | 'build' | 'team'
+    };
+
+    // =========================================================================
+    // 4. SYMBOL & BADGE HELPERS ("ASSAS" FOR ASSASSIN)
+    // =========================================================================
+    function formatRoleSymbol(role) {
+      return role === 'Assassin' ? 'ASSAS' : role.slice(0, 3).toUpperCase();
+    }
+
+    function renderHeroCrest(hero, size = 'md') {
+      const meta = ROLE_META[hero.role] || ROLE_META.Fighter;
+      const initials = hero.name
+        .split(/[\s.-]+/)
+        .filter(Boolean)
+        .map(part => part[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+      const dim = size === 'lg' ? 'w-14 h-14 text-lg' : 'w-11 h-11 text-sm';
+      const symbol = formatRoleSymbol(hero.role);
+
+      return `
+        <div class="${dim} shrink-0 rounded-2xl bg-gradient-to-br ${meta.grad} p-[1.5px] shadow-lg">
+          <div class="w-full h-full rounded-[14px] bg-[#060b16]/95 flex flex-col items-center justify-center relative overflow-hidden">
+            <span class="font-display font-extrabold text-white tracking-wider leading-none">${initials}</span>
+            <span class="text-[9px] font-mono font-bold mt-0.5 leading-none ${meta.badge.split(' ')[1]}">${symbol}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStepChip(stepObj, compact = false) {
+      let cls = 'bg-[#22d3ee]/15 text-cyan-200 border-[#22d3ee]/40';
+      if (stepObj.type === 'ult') {
+        cls = 'bg-[#f5c451]/20 text-amber-200 border-[#f5c451]/60';
+      } else if (stepObj.type === 'ba') {
+        cls = 'bg-purple-500/20 text-purple-200 border-purple-400/40';
+      } else if (stepObj.type === 'spell') {
+        cls = 'bg-rose-500/20 text-rose-200 border-rose-400/40';
+      }
+      const pad = compact ? 'px-1.5 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs';
+      return `<span class="font-mono font-bold rounded-md border ${pad} ${cls}">${escapeHTML(stepObj.label)}</span>`;
+    }
+
+    function renderComboChain(steps, compact = false) {
+      return steps.map((s, i) => `
+        <span class="inline-flex items-center gap-1">
+          ${renderStepChip(s, compact)}
+          ${i < steps.length - 1 ? '<span class="text-slate-500 text-xs font-bold">→</span>' : ''}
+        </span>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 5. INITIALIZATION & FILTER HANDLERS
+    // =========================================================================
+    function init() {
+      populateEnemyDropdown();
+      populateTalentDropdown();
+      renderRolePills();
+      renderEmblemCodex();
+      renderHeroes();
+      renderInspector(getSelectedHero());
+
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', (e) => {
+        state.search = e.target.value.trim();
+        document.getElementById('clear-search').classList.toggle('hidden', !state.search);
+        renderHeroes();
+      });
+    }
+
+    function populateEnemyDropdown() {
+      const select = document.getElementById('enemy-counter-select');
+      const sorted = [...HEROES].sort((a, b) => a.name.localeCompare(b.name));
+      sorted.forEach(h => {
+        const opt = document.createElement('option');
+        opt.value = h.name;
+        opt.textContent = `⚔ Counter: ${h.name} (${formatRoleSymbol(h.role)})`;
+        select.appendChild(opt);
+      });
+    }
+
+    function populateTalentDropdown() {
+      const select = document.getElementById('talent-select');
+      const talents = [...new Set(HEROES.map(h => h.emblem.t3))].sort((a, b) => a.localeCompare(b));
+      talents.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = `⚡ Talent: ${t}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderRolePills() {
+      const container = document.getElementById('role-pills');
+      container.innerHTML = ROLES.map(role => {
+        const active = state.role === role;
+        const meta = ROLE_META[role];
+        const symbol = role === 'All' ? '' : `<span class="font-mono text-[10px] mr-0.5">${formatRoleSymbol(role)}</span>`;
+        const activeCls = 'bg-[#f5c451]/20 text-amber-200 border-[#f5c451]/70 shadow-sm';
+        const inactiveCls = 'bg-[#111c33] text-slate-400 border-[#1e325c] hover:text-slate-200 hover:border-[#22d3ee]/40';
+        return `
+          <button onclick="setRole('${role}')"
+            class="px-3 py-1.5 rounded-xl border text-xs font-semibold transition shrink-0 flex items-center gap-1 ${active ? activeCls : inactiveCls}">
+            ${role !== 'All' && meta ? `<span class="${meta.badge.split(' ')[1]}">${symbol}</span>` : ''}
+            <span>${role}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setRole(role) {
+      state.role = role;
+      renderRolePills();
+      renderHeroes();
+    }
+
+    function handleLaneSelect(lane) {
+      state.lane = lane;
+      renderHeroes();
+    }
+
+    function handleTalentSelect(talent) {
+      state.talent = talent;
+      renderHeroes();
+    }
+
+    function handleEnemySelect(enemyName) {
+      state.enemyCounter = enemyName;
+      const banner = document.getElementById('counter-banner');
+
+      if (!enemyName) {
+        banner.classList.add('hidden');
+        renderHeroes();
+        return;
+      }
+
+      const enemyHero = HEROES.find(h => h.name.toLowerCase() === enemyName.toLowerCase());
+      if (enemyHero) {
+        document.getElementById('banner-enemy-name').textContent =
+          `${enemyHero.name} (${formatRoleSymbol(enemyHero.role)} ${enemyHero.role})`;
+        document.getElementById('banner-counter-chips').innerHTML = enemyHero.counters.map(c => `
+          <button onclick="jumpToHeroByName('${escapeAttr(c.hero)}')"
+            class="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 text-xs font-semibold transition">
+            ✦ ${escapeHTML(c.hero)}
+          </button>
+        `).join('');
+        banner.classList.remove('hidden');
+      }
+
+      renderHeroes();
+    }
+
+    function resetEnemyCounter() {
+      state.enemyCounter = '';
+      document.getElementById('enemy-counter-select').value = '';
+      document.getElementById('counter-banner').classList.add('hidden');
+      renderHeroes();
+    }
+
+    function clearSearch() {
+      state.search = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search').classList.add('hidden');
+      renderHeroes();
+    }
+
+    function resetAllFilters() {
+      state.enemyCounter = '';
+      state.search = '';
+      state.role = 'All';
+      state.lane = 'All Lanes';
+      state.talent = '';
+
+      document.getElementById('enemy-counter-select').value = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search').classList.add('hidden');
+      document.getElementById('lane-select').value = 'All Lanes';
+      document.getElementById('talent-select').value = '';
+      document.getElementById('counter-banner').classList.add('hidden');
+
+      renderRolePills();
+      renderHeroes();
+    }
+
+    function applyTalentFilter(talentName) {
+      state.talent = talentName;
+      document.getElementById('talent-select').value = talentName;
+      switchMainTab('draft');
+      renderHeroes();
+      showToast(`Filtered heroes by talent: ${talentName}`);
+    }
+
+    function applyEmblemFilter(emblemName) {
+      resetAllFilters();
+      state.search = emblemName;
+      document.getElementById('search-input').value = emblemName;
+      document.getElementById('clear-search').classList.remove('hidden');
+      switchMainTab('draft');
+      renderHeroes();
+      showToast(`Showing heroes using ${emblemName} Emblem`);
+    }
+
+    // =========================================================================
+    // 6. FILTERING, ROSTER GRID & INSPECTOR
+    // =========================================================================
+    function getFilteredHeroes() {
+      const q = state.search.toLowerCase();
+      let counterSet = null;
+
+      if (state.enemyCounter) {
+        const enemyObj = HEROES.find(h => h.name.toLowerCase() === state.enemyCounter.toLowerCase());
+        if (enemyObj) {
+          counterSet = new Set(enemyObj.counters.map(c => c.hero.toLowerCase()));
+        }
+      }
+
+      return HEROES.filter(hero => {
+        if (state.role !== 'All' && hero.role !== state.role) return false;
+        if (state.lane !== 'All Lanes' && !hero.lane.includes(state.lane)) return false;
+        if (state.talent && hero.emblem.t3.toLowerCase() !== state.talent.toLowerCase()) return false;
+
+        if (counterSet) {
+          const matchesCounterList = counterSet.has(hero.name.toLowerCase());
+          const matchesCounterReason = hero.counters.some(c => c.hero.toLowerCase() === state.enemyCounter.toLowerCase());
+          if (!matchesCounterList && !matchesCounterReason) return false;
+        }
+
+        if (q) {
+          const haystack = [
+            hero.name,
+            hero.role,
+            hero.specialty,
+            ...hero.lane,
+            ...hero.strengths,
+            ...hero.counters.map(c => `${c.hero} ${c.reason}`),
+            hero.emblem.name,
+            hero.emblem.t1,
+            hero.emblem.t2,
+            hero.emblem.t3,
+            hero.emblem.spell,
+            ...hero.build,
+            ...hero.swaps,
+            ...hero.combos.map(cb => `${cb.name} ${cb.tip} ${cb.steps.map(s => s.label).join(' ')}`),
+            hero.team.archetype,
+            hero.team.winCondition
+          ].join(' ').toLowerCase();
+          if (!haystack.includes(q)) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderHeroes() {
+      const list = getFilteredHeroes();
+      const grid = document.getElementById('hero-grid');
+      const empty = document.getElementById('empty-state');
+      document.getElementById('visible-count').textContent = list.length;
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+
+      grid.innerHTML = list.map(hero => {
+        const isSelected = hero.id === state.selectedHeroId;
+        const meta = ROLE_META[hero.role] || ROLE_META.Fighter;
+        const primaryCombo = hero.combos[0];
+
+        return `
+          <article onclick="selectHero('${hero.id}')"
+            class="animate-card cursor-pointer rounded-2xl p-4 border transition-all duration-200 flex flex-col justify-between
+            ${isSelected
+              ? 'bg-[#111c33] border-[#f5c451] shadow-gold-glow ring-1 ring-[#f5c451]/40'
+              : 'bg-[#0b1326]/95 border-[#1e325c] hover:border-[#22d3ee]/60 hover:bg-[#111c33]/80'}">
+            <div>
+              <!-- Header -->
+              <div class="flex items-start justify-between gap-2.5 mb-2.5">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  ${renderHeroCrest(hero, 'md')}
+                  <div class="min-w-0">
+                    <h3 class="font-bold text-white text-base truncate">${escapeHTML(hero.name)}</h3>
+                    <p class="text-[11px] text-slate-400 truncate">${escapeHTML(hero.specialty)}</p>
+                    <div class="flex flex-wrap items-center gap-1 mt-1">
+                      <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border ${meta.badge}">
+                        ${formatRoleSymbol(hero.role)} ${escapeHTML(hero.role)}
+                      </span>
+                      ${hero.lane.map(l => `
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#060b16] border border-[#1e325c] text-slate-300">${escapeHTML(l)}</span>
+                      `).join('')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Emblem & Spell Strip -->
+              <div class="flex items-center justify-between gap-2 text-[11px] bg-[#060b16]/80 border border-[#1e325c]/80 rounded-xl px-2.5 py-1.5 mb-2.5">
+                <span class="text-[#f5c451] font-semibold truncate">⚡ ${escapeHTML(hero.emblem.name)} · ${escapeHTML(hero.emblem.t3)}</span>
+                <span class="text-[#22d3ee] font-mono text-[10px] shrink-0">${escapeHTML(hero.emblem.spell)}</span>
+              </div>
+
+              <!-- Top Combo Preview -->
+              <div class="bg-[#060b16]/70 border border-[#1e325c]/70 rounded-xl p-2 mb-2.5">
+                <div class="text-[10px] font-mono text-cyan-300 uppercase mb-1 truncate">${escapeHTML(primaryCombo.name)}</div>
+                <div class="flex flex-wrap items-center gap-1">
+                  ${renderComboChain(primaryCombo.steps, true)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Countered By Footer -->
+            <div class="pt-2 border-t border-[#1e325c]/70">
+              <div class="flex items-center justify-between text-[10px] font-mono uppercase text-rose-300 mb-1">
+                <span>Countered By</span>
+                <span class="text-[#f5c451]">Inspect →</span>
+              </div>
+              <div class="flex flex-wrap gap-1">
+                ${hero.counters.map(c => `
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30 text-rose-200">${escapeHTML(c.hero)}</span>
+                `).join('')}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function getSelectedHero() {
+      return HEROES.find(h => h.id === state.selectedHeroId) || HEROES[0];
+    }
+
+    function selectHero(id) {
+      state.selectedHeroId = id;
+      const hero = getSelectedHero();
+      renderHeroes();
+      renderInspector(hero);
+
+      if (window.innerWidth < 1280) {
+        const modal = document.getElementById('mobile-inspector-modal');
+        document.getElementById('mobile-inspector-content').innerHTML = buildInspectorHTML(hero, true);
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeMobileInspector() {
+      document.getElementById('mobile-inspector-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function setInspectorTab(tab) {
+      state.inspectorTab = tab;
+      const hero = getSelectedHero();
+      renderInspector(hero);
+      const modal = document.getElementById('mobile-inspector-modal');
+      if (!modal.classList.contains('hidden')) {
+        document.getElementById('mobile-inspector-content').innerHTML = buildInspectorHTML(hero, true);
+      }
+    }
+
+    function jumpToHeroByName(heroName) {
+      const target = HEROES.find(h => h.name.toLowerCase() === heroName.toLowerCase());
+      if (!target) {
+        showToast(`${heroName} is not in the active 52-hero list.`);
+        return;
+      }
+      state.selectedHeroId = target.id;
+      renderHeroes();
+      renderInspector(target);
+
+      if (window.innerWidth < 1280) {
+        document.getElementById('mobile-inspector-content').innerHTML = buildInspectorHTML(target, true);
+        document.getElementById('mobile-inspector-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+      showToast(`Switched inspector to ${target.name}`);
+    }
+
+    function renderInspector(hero) {
+      document.getElementById('desktop-inspector').innerHTML = buildInspectorHTML(hero, false);
+    }
+
+    function buildInspectorHTML(hero, isMobile) {
+      const meta = ROLE_META[hero.role] || ROLE_META.Fighter;
+      const subTabs = [
+        { id: 'overview', label: 'Overview & Counters' },
+        { id: 'combos',   label: 'Skill Combos' },
+        { id: 'build',    label: '6-Item Build' },
+        { id: 'team',     label: 'Emblem & Team' }
+      ];
+
+      let body = '';
+
+      if (state.inspectorTab === 'overview') {
+        body = `
+          <div class="mb-4">
+            <h4 class="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold mb-2">✦ Core Strengths</h4>
+            <ul class="space-y-2">
+              ${hero.strengths.map(s => `
+                <li class="text-xs sm:text-sm text-slate-200 bg-[#060b16] border border-[#1e325c] rounded-xl px-3 py-2.5 flex items-start gap-2">
+                  <span class="text-[#22d3ee] font-bold">▸</span>
+                  <span>${escapeHTML(s)}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold mb-2">▼ Counter Matchups (Click Hero to Jump)</h4>
+            <div class="space-y-2">
+              ${hero.counters.map(c => `
+                <div onclick="jumpToHeroByName('${escapeAttr(c.hero)}')"
+                  class="cursor-pointer group bg-rose-950/20 hover:bg-rose-950/40 border border-rose-500/30 hover:border-rose-400 rounded-xl p-3 transition">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs sm:text-sm font-bold text-rose-200 group-hover:text-white">${escapeHTML(c.hero)}</span>
+                    <span class="text-[10px] font-mono text-rose-300 group-hover:translate-x-0.5 transition-transform">Open Profile →</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">${escapeHTML(c.reason)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (state.inspectorTab === 'combos') {
+        body = `
+          <div class="space-y-3">
+            ${hero.combos.map((cb, idx) => `
+              <div class="bg-[#060b16] border border-[#1e325c] rounded-2xl p-3.5">
+                <div class="text-xs sm:text-sm font-bold text-white mb-2">
+                  <span class="text-[#f5c451] font-mono mr-1.5">#${idx + 1}</span>${escapeHTML(cb.name)}
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 bg-[#0b1326] border border-[#1e325c]/80 rounded-xl p-2.5 mb-2.5">
+                  ${renderComboChain(cb.steps, false)}
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  <strong class="text-[#22d3ee]">Combo Tip:</strong> ${escapeHTML(cb.tip)}
+                </p>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (state.inspectorTab === 'build') {
+        body = `
+          <div class="mb-4">
+            <h4 class="text-xs font-mono uppercase tracking-wider text-[#f5c451] font-bold mb-2">Recommended 6-Item Build</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${hero.build.map((item, idx) => `
+                <div class="bg-[#060b16] border border-[#1e325c] rounded-xl p-2.5 flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-[#f5c451]/15 border border-[#f5c451]/40 text-[#f5c451] font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                    ${idx + 1}
+                  </span>
+                  <span class="text-xs font-semibold text-slate-100 truncate">${escapeHTML(item)}</span>
+                </div>
+              `).join('')}
+            </div>
+            <p class="text-xs text-slate-400 mt-2.5 bg-[#060b16]/70 border border-[#1e325c]/70 rounded-xl p-2.5">
+              <strong class="text-[#f5c451]">Build Synergy:</strong> Core itemization for ${escapeHTML(hero.name)} (${escapeHTML(hero.specialty)}) paired with ${escapeHTML(hero.emblem.name)} Emblem and ${escapeHTML(hero.emblem.spell)}.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-mono uppercase tracking-wider text-[#22d3ee] font-bold mb-2">Situational Swaps</h4>
+            <div class="flex flex-wrap gap-1.5">
+              ${hero.swaps.map(sw => `
+                <span class="text-xs px-3 py-1.5 rounded-xl bg-[#111c33] border border-[#22d3ee]/35 text-cyan-200 font-medium">
+                  ↻ ${escapeHTML(sw)}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (state.inspectorTab === 'team') {
+        const slots = [
+          { lane: 'EXP Lane',  val: hero.team.exp },
+          { lane: 'Jungle',    val: hero.team.jungle },
+          { lane: 'Mid Lane',  val: hero.team.mid },
+          { lane: 'Gold Lane', val: hero.team.gold },
+          { lane: 'Roam',      val: hero.team.roam }
+        ];
+
+        body = `
+          <!-- Emblem & Spell -->
+          <div class="bg-[#060b16] border border-[#f5c451]/35 rounded-2xl p-3.5 mb-4">
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <span class="text-xs font-mono uppercase text-[#f5c451] font-bold">Emblem &amp; Battle Spell</span>
+              <span class="text-xs font-mono text-[#22d3ee] font-bold">Spell: ${escapeHTML(hero.emblem.spell)}</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+              <div class="bg-[#0b1326] border border-[#1e325c] rounded-xl p-2">
+                <span class="text-[9px] font-mono uppercase text-slate-400 block">Emblem</span>
+                <span class="text-xs font-bold text-white">${escapeHTML(hero.emblem.name)}</span>
+              </div>
+              <div class="bg-[#0b1326] border border-[#1e325c] rounded-xl p-2">
+                <span class="text-[9px] font-mono uppercase text-slate-400 block">Tier 1</span>
+                <span class="text-xs font-semibold text-cyan-200">${escapeHTML(hero.emblem.t1)}</span>
+              </div>
+              <div class="bg-[#0b1326] border border-[#1e325c] rounded-xl p-2">
+                <span class="text-[9px] font-mono uppercase text-slate-400 block">Tier 2</span>
+                <span class="text-xs font-semibold text-cyan-200">${escapeHTML(hero.emblem.t2)}</span>
+              </div>
+              <div class="bg-[#f5c451]/15 border border-[#f5c451]/50 rounded-xl p-2">
+                <span class="text-[9px] font-mono uppercase text-[#f5c451] block">Tier 3 Core</span>
+                <span class="text-xs font-bold text-amber-200">${escapeHTML(hero.emblem.t3)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5-Lane Dream Team -->
+          <div class="bg-[#060b16] border border-[#22d3ee]/35 rounded-2xl p-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+              <span class="text-xs font-mono uppercase text-[#22d3ee] font-bold">5-Man Dream Team</span>
+              <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#22d3ee]/10 border border-[#22d3ee]/30 text-cyan-200">
+                ${escapeHTML(hero.team.archetype)}
+              </span>
+            </div>
+
+            <div class="space-y-1.5 mb-3">
+              ${slots.map(s => {
+                const isSelf = s.val.toLowerCase() === hero.name.toLowerCase();
+                return `
+                  <div onclick="jumpToHeroByName('${escapeAttr(s.val)}')"
+                    class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-xl border transition
+                    ${isSelf
+                      ? 'bg-[#f5c451]/15 border-[#f5c451]/60 text-amber-200'
+                      : 'bg-[#0b1326] hover:bg-[#111c33] border-[#1e325c] hover:border-[#22d3ee]/50 text-slate-200'}">
+                    <span class="text-[11px] font-mono uppercase ${isSelf ? 'text-[#f5c451] font-bold' : 'text-slate-400'}">${s.lane}</span>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold">${escapeHTML(s.val)}</span>
+                      <span class="text-[10px] font-mono ${isSelf ? 'text-[#f5c451]' : 'text-cyan-400'}">${isSelf ? 'SELECTED' : 'Jump →'}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed pt-2 border-t border-[#1e325c]">
+              <strong class="text-emerald-400">Win Condition:</strong> ${escapeHTML(hero.team.winCondition)}
+            </p>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="p-4 sm:p-5 border-b border-[#1e325c] bg-[#0b1326] shrink-0">
+          <div class="flex items-start justify-between gap-3 mb-3.5">
+            <div class="flex items-center gap-3 min-w-0">
+              ${renderHeroCrest(hero, 'lg')}
+              <div class="min-w-0">
+                <h2 class="font-display text-lg sm:text-xl font-bold text-white truncate">${escapeHTML(hero.name)}</h2>
+                <p class="text-xs text-slate-400 truncate">${escapeHTML(hero.specialty)}</p>
+                <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+                  <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md border ${meta.badge}">
+                    ${formatRoleSymbol(hero.role)} ${escapeHTML(hero.role)}
+                  </span>
+                  ${hero.lane.map(l => `
+                    <span class="text-[11px] px-2 py-0.5 rounded-md bg-[#111c33] border border-[#1e325c] text-slate-300">${escapeHTML(l)}</span>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="copyFullGuide('${hero.id}')"
+                class="px-3 py-2 rounded-xl bg-[#f5c451]/20 hover:bg-[#f5c451]/30 border border-[#f5c451]/60 text-amber-200 text-xs font-semibold transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                </svg>
+                <span>Copy Full Guide</span>
+              </button>
+              ${isMobile ? `
+                <button onclick="closeMobileInspector()" class="p-2 rounded-xl bg-[#111c33] hover:bg-slate-800 text-slate-300 text-xs font-bold border border-[#1e325c]">
+                  ✕
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Inspector Sub-Tabs -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-[#060b16] p-1 rounded-xl border border-[#1e325c]">
+            ${subTabs.map(t => {
+              const active = state.inspectorTab === t.id;
+              return `
+                <button onclick="setInspectorTab('${t.id}')"
+                  class="py-1.5 px-2 rounded-lg text-[11px] font-semibold transition truncate
+                  ${active
+                    ? 'bg-[#f5c451]/20 text-amber-200 border border-[#f5c451]/60'
+                    : 'text-slate-400 hover:text-white'}">
+                  ${t.label}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-5 overflow-y-auto flex-1">
+          ${body}
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 7. EMBLEM CODEX RENDERING
+    // =========================================================================
+    function renderEmblemCodex() {
+      const grid = document.getElementById('emblems-grid');
+      grid.innerHTML = Object.values(EMBLEM_CATALOG).map(emb => {
+        const count = HEROES.filter(h => h.emblem.name === emb.id).length;
+        const sym = formatRoleSymbol(emb.id);
+        return `
+          <div class="bg-[#0b1326] border border-[#1e325c] hover:border-[#f5c451]/60 rounded-2xl p-5 flex flex-col justify-between transition shadow-lg">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="px-3 py-1 rounded-lg border text-xs font-bold ${emb.badge}">
+                  ${escapeHTML(sym)} ${escapeHTML(emb.name)}
+                </span>
+                <span class="text-xs font-mono text-slate-400">${count} Heroes</span>
+              </div>
+
+              <div class="mb-3">
+                <span class="text-[10px] font-mono uppercase text-slate-500 block mb-1">Max Level Base Attributes</span>
+                <ul class="space-y-1">
+                  ${emb.maxStats.map(stItem => `
+                    <li class="text-xs text-emerald-300 font-medium">• ${escapeHTML(stItem)}</li>
+                  `).join('')}
+                </ul>
+              </div>
+
+              <p class="text-xs text-slate-400 mb-3">
+                <strong class="text-slate-200">Ideal For:</strong> ${escapeHTML(emb.roleSummary)}
+              </p>
+
+              <div class="bg-[#060b16] border border-[#1e325c] rounded-xl p-2.5 mb-4">
+                <span class="text-[10px] font-mono uppercase text-[#f5c451] block mb-1">Recommended Talents</span>
+                <div class="text-xs text-cyan-200 font-medium">${escapeHTML(emb.recommendedTalents.join(' → '))}</div>
+              </div>
+            </div>
+
+            <button onclick="applyEmblemFilter('${escapeAttr(emb.id)}')"
+              class="w-full py-2 rounded-xl bg-[#f5c451]/15 hover:bg-[#f5c451]/25 border border-[#f5c451]/50 text-amber-200 text-xs font-semibold transition">
+              Filter ${count} ${escapeHTML(emb.name)} Heroes →
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const coreGrid = document.getElementById('core-talents-grid');
+      coreGrid.innerHTML = TIER3_TALENTS.map(t => `
+        <div onclick="applyTalentFilter('${escapeAttr(t.name)}')"
+          class="cursor-pointer bg-[#060b16] hover:bg-[#111c33] border border-[#1e325c] hover:border-[#22d3ee]/60 rounded-xl p-3.5 transition">
+          <div class="text-xs font-bold text-[#f5c451] mb-1">⚡ ${escapeHTML(t.name)}</div>
+          <p class="text-xs text-slate-400 leading-relaxed">${escapeHTML(t.desc)}</p>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 8. TAB SWITCHING, CLIPBOARD & UTILITIES
+    // =========================================================================
+    function switchMainTab(tab) {
+      state.activeTab = tab;
+      const draftView = document.getElementById('view-draft');
+      const emblemsView = document.getElementById('view-emblems');
+
+      const activeCls = ['bg-[#f5c451]/20', 'text-amber-200', 'border', 'border-[#f5c451]/60'];
+      const inactiveCls = ['text-slate-400', 'hover:text-white'];
+
+      const dBtn = document.getElementById('tab-draft-desktop');
+      const eBtn = document.getElementById('tab-emblems-desktop');
+      const dMob = document.getElementById('tab-draft-mobile');
+      const eMob = document.getElementById('tab-emblems-mobile');
+
+      if (tab === 'draft') {
+        draftView.classList.remove('hidden');
+        emblemsView.classList.add('hidden');
+        [dBtn, dMob].forEach(el => { el.classList.add(...activeCls); el.classList.remove(...inactiveCls); });
+        [eBtn, eMob].forEach(el => { el.classList.remove(...activeCls); el.classList.add(...inactiveCls); });
+      } else {
+        draftView.classList.add('hidden');
+        emblemsView.classList.remove('hidden');
+        [eBtn, eMob].forEach(el => { el.classList.add(...activeCls); el.classList.remove(...inactiveCls); });
+        [dBtn, dMob].forEach(el => { el.classList.remove(...activeCls); el.classList.add(...inactiveCls); });
+      }
+    }
+
+    function copyFullGuide(heroId) {
+      const hero = HEROES.find(h => h.id === heroId);
+      if (!hero) return;
+
+      const lines = [
+        `MLBB // ${hero.name.toUpperCase()} (${formatRoleSymbol(hero.role)} ${hero.role} · ${hero.lane.join('/')})`,
+        `Emblem: ${hero.emblem.name} [${hero.emblem.t1} | ${hero.emblem.t2} | ${hero.emblem.t3}] · Spell: ${hero.emblem.spell}`,
+        `6-Item Build: ${hero.build.join(' -> ')}`,
+        `Swaps: ${hero.swaps.join(', ')}`,
+        `Combos:`,
+        ...hero.combos.map(c => `  - ${c.name}: ${c.steps.map(s => s.label).join(' -> ')} (${c.tip})`),
+        `Counters: ${hero.counters.map(c => c.hero).join(', ')}`,
+        `5-Man Team (${hero.team.archetype}): EXP ${hero.team.exp} | Jungle ${hero.team.jungle} | Mid ${hero.team.mid} | Gold ${hero.team.gold} | Roam ${hero.team.roam}`
+      ];
+
+      const ta = document.createElement('textarea');
+      ta.value = lines.join('\n');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Copied full ${hero.name} guide to clipboard!`);
+      } catch (err) {
+        showToast('Copy failed in this browser context.');
+      }
+      document.body.removeChild(ta);
+    }
+
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2600);
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function escapeAttr(str) {
+      return String(str).replace(/'/g, "\\'");
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
+```
